@@ -1,0 +1,85 @@
+<div class="container">
+    <div class="background">
+        <div class="stars"></div>
+        <div class="twinkling"></div>
+        <div class="gradient"></div>
+    </div>
+
+    <div class="header">
+        <h1 class="header__title">Mission control</h1>
+    </div>
+
+    <div class="content">
+        <div class="content-wrap">
+            <perfect-scrollbar class="content-scroll" #scroll>
+                <div class="panel"
+                     #panel
+                    [ngStyle]="{'width': visibleBoxes * 650 + 380 + 'px'}">
+                    <div class="box box__welcome box-1" *ngIf="boxes[1].visible">
+                        <div class="box__welcome-wrap">
+                            <span class="box__welcome-title">
+                                No more Exuses
+                            </span>
+                            <span class="box__welcome-description">
+                                Welcome to MISSION CONTROL
+                                where you now have a say
+                                in the direction AND momentum
+                                your tokens:
+                            </span>
+                            <button class="box__welcome-button" (click)="onScatter()">
+                                SCATTER
+                            </button>
+                        </div>
+                    </div>
+                    <div class="box box__tokens box-2"
+                         *ngIf="boxes[2].visible"
+                         [@enterAnimation]>
+                        <div class="token__list">
+                            <div class="token__list-item" (click)="onGetToken()">
+                                <p>Headline</p>
+                            </div>
+                            <div class="token__list-item">
+                                <p>Headline</p>
+                            </div>
+                            <div class="token__list-item">
+                                <p>Headline</p>
+                            </div>
+                            <div class="token__list-item">
+                                <p>Headline</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box box__statistic box-3"
+                         *ngIf="boxes[3].visible"
+                         [@enterAnimation]
+                         (click)="onNextCard(4)">
+                        <div class="box__head">
+                            <p>Headline</p>
+                        </div>
+                    </div>
+                    <div class="box box__success box-4"
+                         *ngIf="boxes[4].visible"
+                         [@enterAnimation]>
+                        <div class="box__head">
+                            <p>Transaction success</p>
+                        </div>
+                        <div class="box__success-wrap">
+                            <div class="box__success-button" (click)="onNextCard(5)">Repeat transaction</div>
+                            <div class="box__success-button light" (click)="onNextCard(5)">Choose different token</div>
+                        </div>
+                    </div>
+                    <div class="box box__package box-5"
+                         *ngIf="boxes[5].visible"
+                         [@enterAnimation]>
+                        <div class="box__head">
+                            <p>Choose a package</p>
+                        </div>
+                    </div>
+                </div>
+            </perfect-scrollbar>
+
+        </div>
+    </div>
+
+
+</div>

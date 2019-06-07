@@ -1,0 +1,102 @@
+*, *:before, *:after {
+  box-sizing: border-box;
+  outline-style: none;
+  margin: 0;
+  padding: 0
+}
+
+html {
+  box-sizing: border-box;
+}
+
+img {
+  border: 0 none
+}
+
+body {
+  font-size: 11px;
+  color: #000000;
+  font-weight: normal;
+  font-family: 'orbitronregular', sans-serif, serif;
+  min-height: 500px;
+}
+
+b, strong {
+  font-weight: 700
+}
+
+p {
+  margin: 0
+}
+
+i {
+  font-style: italic
+}
+
+small {
+  text-transform: lowercase
+}
+
+ul li {
+  list-style: none
+}
+
+body{
+
+}
+
+body, html{
+  height: 100%;
+}
+
+@font-face {
+  font-family: 'orbitronbold';
+  src: url('./assets/fonts/orbitron-bold-webfont.eot');
+  src: url('./assets/fonts/orbitron-bold-webfont.eot?#iefix') format('embedded-opentype'),
+  url('./assets/fonts/orbitron-bold-webfont.woff2') format('woff2'),
+  url('./assets/fonts/orbitron-bold-webfont.woff') format('woff'),
+  url('./assets/fonts/orbitron-bold-webfont.svg#orbitronbold') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'orbitronregular';
+  src: url('./assets/fonts/orbitron-regular-webfont.eot');
+  src: url('./assets/fonts/orbitron-regular-webfont.eot?#iefix') format('embedded-opentype'),
+  url('./assets/fonts/orbitron-regular-webfont.woff2') format('woff2'),
+  url('./assets/fonts/orbitron-regular-webfont.woff') format('woff'),
+  url('./assets/fonts/orbitron-regular-webfont.svg#orbitronregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'orbitron_mediumregular';
+  src: url('./assets/fonts/orbitron-medium-webfont.eot');
+  src: url('./assets/fonts/orbitron-medium-webfont.eot?#iefix') format('embedded-opentype'),
+  url('./assets/fonts/orbitron-medium-webfont.woff2') format('woff2'),
+  url('./assets/fonts/orbitron-medium-webfont.woff') format('woff'),
+  url('./assets/fonts/orbitron-medium-webfont.svg#orbitron_mediumregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'avenirregular';
+  src: url('./assets/fonts/avenir_45_book-webfont.eot');
+  src: url('./assets/fonts/avenir_45_book-webfont.eot?#iefix') format('embedded-opentype'),
+  url('./assets/fonts/avenir_45_book-webfont.woff2') format('woff2'),
+  url('./assets/fonts/avenir_45_book-webfont.woff') format('woff'),
+  url('./assets/fonts/avenir_45_book-webfont.svg#avenirregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+.ps-content{
+  height: 100%;
+}
+.ps__rail-x{
+  display: none!important;
+}
