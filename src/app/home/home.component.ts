@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation, ViewChild, PLATFORM_ID, Inject, OnInit} from '@angular/core';
+import {Component, HostListener, ViewEncapsulation, ViewChild, PLATFORM_ID, Inject, OnInit} from '@angular/core';
 import { trigger, transition, animate, style, state } from '@angular/animations'
 import { PerfectScrollbarComponent } from 'ngx-perfect-scrollbar';
 import { isPlatformBrowser} from '@angular/common';
@@ -28,6 +28,7 @@ export class HomeComponent implements OnInit{
   @ViewChild('scroll') scrollEl: PerfectScrollbarComponent;
   @ViewChild('panel') panelEl: any;
   isBrowser:boolean;
+  screenWidth:number;
 
   boxes:any = {
     "1": {
@@ -66,8 +67,24 @@ export class HomeComponent implements OnInit{
 
   visibleBoxes:number = 0;
 
+  cardWidth:number = 650;
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event?) {
+    this.screenWidth = window.innerWidth;
+    if(this.screenWidth < 650){
+      this.cardWidth = this.screenWidth;
+    }
+  }
+
   constructor(@Inject(PLATFORM_ID) platformId: string){
     this.isBrowser = isPlatformBrowser(platformId);
+    if(this.isBrowser){
+      this.screenWidth = window.innerWidth;
+      if(this.screenWidth < 650){
+        this.cardWidth = this.screenWidth;
+      }
+    }
   }
 
   ngOnInit(){

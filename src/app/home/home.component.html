@@ -14,8 +14,10 @@
             <perfect-scrollbar class="content-scroll" #scroll>
                 <div class="panel"
                      #panel
-                    [ngStyle]="{'width': visibleBoxes * 650 + 380 + 'px'}">
-                    <div class="box box__welcome box-1" *ngIf="boxes[1].visible">
+                    [ngStyle]="{'width': visibleBoxes * cardWidth + (screenWidth > 650 ? screenWidth/2-cardWidth/2 : 0) + 'px'}">
+                    <div class="box box__welcome box-1"
+                         [ngStyle]="{'width': cardWidth + 'px'}"
+                         *ngIf="boxes[1].visible">
                         <div class="box__welcome-wrap">
                             <span class="box__welcome-title">
                                 No more Exuses
@@ -31,13 +33,14 @@
                             </button>
                             <div class="box__welcome_full">
                                 <div class="box__welcome__get-all" (click)="onScatter()">
-                                    <i class="icon"></i>
+                                    <i class="icon"><img src=".././../assets/images/arrow-right.svg"/></i>
                                     <p>Browse ALL</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="box box__tokens box-2"
+                         [ngStyle]="{'width': cardWidth + 'px'}"
                          *ngIf="boxes[2].visible"
                          [@enterAnimation]>
                         <div class="token__list">
@@ -92,6 +95,7 @@
                         </div>
                     </div>
                     <div class="box box__statistic box-3"
+                         [ngStyle]="{'width': cardWidth + 'px'}"
                          *ngIf="boxes[3].visible"
                          [@enterAnimation]>
                         <div class="box__head">
@@ -120,11 +124,12 @@
                         </div>
                     </div>
                     <div class="box box__lock box-4"
+                         [ngStyle]="{'width': cardWidth + 'px'}"
                          *ngIf="boxes[4].visible"
                          [@enterAnimation]>
                         <div class="box__head">
                             <p>Token 1 - LOCK</p>
-                            <div class="box__head-button" (click)="onNextCard(6)">SIGN</div>
+                            <div class="box__head-button" (click)="onNextCard(5)">SIGN</div>
                         </div>
                         <div class="box__lock-body">
                             <div class="lock">
@@ -148,13 +153,14 @@
                                     <input type="number" value="8000"/>
                                 </div>
                                 <div class="lock-info__item">
-                                    <p>New Balance: </p>
+                                    <p>New Balance:</p>
                                     <b>900 000</b>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="box box__package box-5"
+                         [ngStyle]="{'width': cardWidth + 'px'}"
                          *ngIf="boxes[5].visible"
                          [@enterAnimation]>
                         <div class="box__head">
@@ -163,17 +169,17 @@
                         <div class="box__package-body">
                             <div class="token__list">
                                 <div class="token__list-scroll">
-                                    <div class="token__list-item">
+                                    <div class="token__list-item" (click)="onNextCard(6)">
                                         <div class="token__list-item_wrap">
                                             <p>Headline</p>
                                         </div>
                                     </div>
-                                    <div class="token__list-item">
+                                    <div class="token__list-item" (click)="onNextCard(6)">
                                         <div class="token__list-item_wrap">
                                             <p>Headline</p>
                                         </div>
                                     </div>
-                                    <div class="token__list-item">
+                                    <div class="token__list-item" (click)="onNextCard(6)">
                                         <div class="token__list-item_wrap">
                                             <p>Headline</p>
                                         </div>
@@ -188,6 +194,7 @@
                         </div>
                     </div>
                     <div class="box box__success box-6"
+                         [ngStyle]="{'width': cardWidth + 'px'}"
                          *ngIf="boxes[6].visible"
                          [@enterAnimation]>
                         <div class="box__head">
@@ -195,8 +202,8 @@
                         </div>
                         <div class="box__success-wrap">
                             <a href="" class="box__success-link">https://bloks.io/transaction/04fba95d723a1183bb…</a>
-                            <div class="box__success-button" (click)="onNextCard(7)">Repeat transaction</div>
-                            <div class="box__success-button light" (click)="onNextCard(7)">Choose different token</div>
+                            <!--<div class="box__success-button" >Repeat transaction</div>-->
+                            <div class="box__success-button light">Choose different token</div>
                         </div>
                     </div>
                 </div>

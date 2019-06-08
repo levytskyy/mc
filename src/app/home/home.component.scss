@@ -139,6 +139,7 @@ $blue-color: #0F59D1;
 .box{
   position: relative;
   width: 650px;
+  min-width: 320px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -240,7 +241,11 @@ $blue-color: #0F59D1;
     border: 1px solid #FFFFFF;
     border-radius: 50%;
     margin: 0 15px 0 0;
-    background: url(../../assets/images/arrow-right.svg);
+    img{
+      width: 70%;
+      display: block;
+      margin: 5px 0 0 6px;
+    }
   }
   p{
     font-family: 'avenirregular';
@@ -586,6 +591,28 @@ $blue-color: #0F59D1;
     &[type=number] {
       -moz-appearance:textfield;
     }
+  }
+}
+
+@media screen and (max-width: 650px){
+  .panel{
+    left: 0;
+    margin-left: 0;
+  }
+  .box__welcome-wrap{
+    padding: 20px 15px;
+  }
+  .box__welcome-title{
+    font-size: 48px;
+    line-height: 1.2;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+  }
+  .box__welcome-description{
+    margin-bottom: 20px;
+  }
+  .box__welcome-button{
+    margin-bottom: 20px;
   }
 }
 
