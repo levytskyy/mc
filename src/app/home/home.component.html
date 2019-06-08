@@ -45,50 +45,13 @@
                          [@enterAnimation]>
                         <div class="token__list">
                             <div class="token__list-scroll">
-                                <div class="token__list-item" (click)="onGetToken()">
+                                <div class="token__list-item"
+                                     *ngFor="let item of data"
+                                     (click)="onGetToken()">
                                     <div class="token__list-item_wrap">
                                         <div class="token__list-icon"></div>
-                                        <p>Headline</p>
-                                        <b>(56)</b>
-                                    </div>
-                                </div>
-                                <div class="token__list-item" (click)="onGetToken()">
-                                    <div class="token__list-item_wrap">
-                                        <div class="token__list-icon"></div>
-                                        <p>Headline</p>
-                                        <b>(13)</b>
-                                    </div>
-                                </div>
-                                <div class="token__list-item" (click)="onGetToken()">
-                                    <div class="token__list-item_wrap">
-                                        <div class="token__list-icon"></div>
-                                        <p>Headline</p>
-                                        <b>(21)</b>
-                                    </div>
-                                </div>
-                                <div class="token__list-item" (click)="onGetToken()">
-                                    <div class="token__list-item_wrap">
-                                        <div class="token__list-icon"></div>
-                                        <p>Headline</p>
-                                        <b>(56)</b>
-                                    </div>
-                                </div>
-                                <div class="token__list-item" (click)="onGetToken()">
-                                    <div class="token__list-item_wrap">
-                                        <div class="token__list-icon"></div>
-                                        <p>Headline</p>
-                                    </div>
-                                </div>
-                                <div class="token__list-item" (click)="onGetToken()">
-                                    <div class="token__list-item_wrap">
-                                        <div class="token__list-icon"></div>
-                                        <p>Headline</p>
-                                    </div>
-                                </div>
-                                <div class="token__list-item" (click)="onGetToken()">
-                                    <div class="token__list-item_wrap">
-                                        <div class="token__list-icon"></div>
-                                        <p>Headline</p>
+                                        <p>{{ item.provider }}</p>
+                                        <b>{{ item.services ? item.services.length : 0 }}</b>
                                     </div>
                                 </div>
                             </div>
