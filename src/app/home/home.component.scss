@@ -498,6 +498,20 @@ $blue-color: #0F59D1;
   flex-direction: column;
   justify-content: flex-end;
   margin-bottom: 25px;
+  &.locked{
+    .lock-head{
+      transform: scaleX(-1);
+      right: 49px;
+      top: 48px;
+    }
+  }
+  &.unlocked{
+    .lock-head{
+      transform: scaleX(1);
+      top:0;
+      right: -10px;
+    }
+  }
 }
 .lock-body{
   position: relative;
@@ -544,13 +558,14 @@ $blue-color: #0F59D1;
 .lock-head{
   position: absolute;
   top: 0;
-  right: -20px;
+  right: 49px;
   width: 93px;
   height: 133px;
   background: url(../../assets/images/lock-head.png);
   background-size: cover;
   background-repeat: no-repeat;
   z-index: 1;
+  transition: .3s;
 }
 .lock-info{
   font-family: 'avenirregular';

@@ -26,9 +26,10 @@ import { isPlatformBrowser} from '@angular/common';
 
 export class HomeComponent implements OnInit{
   @ViewChild('scroll') scrollEl: PerfectScrollbarComponent;
-  @ViewChild('panel') panelEl: any;
   isBrowser:boolean;
   screenWidth:number;
+
+  lock:boolean = false;
 
   boxes:any = {
     "1": {
@@ -65,8 +66,6 @@ export class HomeComponent implements OnInit{
     },
   ];
 
-  visibleBoxes:number = 0;
-
   cardWidth:number = 650;
 
   @HostListener('window:resize', ['$event'])
@@ -88,7 +87,7 @@ export class HomeComponent implements OnInit{
   }
 
   ngOnInit(){
-    this.setBoxVisibleCount()
+
   }
 
   onScatter(){
@@ -118,31 +117,48 @@ export class HomeComponent implements OnInit{
   
   setBoxVisible(id:number){
     this.boxes[id].visible = true;
-    this.setBoxVisibleCount();
   }
 
-  setBoxVisibleCount(){
-    this.visibleBoxes = 0;
+  getCountVisibleBox(){
+    let count = 0;
     for (let i in this.boxes){
       if (this.boxes.hasOwnProperty(i)) {
         if(this.boxes[i].visible){
-          this.visibleBoxes++;
+          count++;
         }
       }
     }
+    return count
   }
 
+  onChooseToken(){
+    //hide all card
+    for(let i in this.boxes){
+      if(this.boxes.hasOwnProperty(i)) {
+        this.boxes[i].visible = false;
+      }
+    }
+    this.boxes[1].visible = true; //show card
+    this.boxes[2].visible = true; //show card
+  }
+
+  onLock(val:boolean){
+    let timeOut = this.boxes[4].visible ? 0 : 800;
+    setTimeout(()=>{
+      this.lock = val;
+    }, timeOut);
+  }
 
   keytab(event){
     let nextInput = event.srcElement.nextElementSibling; // get the sibling element
     let target = event.target || event.srcElement;
     let id = target.id;
-    console.log(id.maxlength);
-
-    if(nextInput == null)
+    if(nextInput == null){
       return;
-    else
+    }else{
       nextInput.focus();
+    }
   }
+
 
 }

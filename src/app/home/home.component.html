@@ -14,7 +14,7 @@
             <perfect-scrollbar class="content-scroll" #scroll>
                 <div class="panel"
                      #panel
-                    [ngStyle]="{'width': visibleBoxes * cardWidth + (screenWidth > 650 ? screenWidth/2-cardWidth/2 : 0) + 'px'}">
+                    [ngStyle]="{'width': getCountVisibleBox() * cardWidth + (screenWidth > 650 ? screenWidth/2-cardWidth/2 : 0) + 'px'}">
                     <div class="box box__welcome box-1"
                          [ngStyle]="{'width': cardWidth + 'px'}"
                          *ngIf="boxes[1].visible">
@@ -113,11 +113,11 @@
                             </ngx-charts-pie-chart>
                             <div class="box__statistic-nav">
                                 <div class="box__statistic-button gray"
-                                     (click)="onNextCard(4)">
+                                     (click)="onLock(true);onNextCard(4);">
                                     <p>Locked</p>
                                 </div>
                                 <div class="box__statistic-button"
-                                     (click)="onNextCard(4)">
+                                     (click)=" onLock(false);onNextCard(4);">
                                     <p>Unlocked</p>
                                 </div>
                             </div>
@@ -132,13 +132,14 @@
                             <div class="box__head-button" (click)="onNextCard(5)">SIGN</div>
                         </div>
                         <div class="box__lock-body">
-                            <div class="lock">
+                            <div class="lock"
+                            [ngClass]="{'locked': lock, 'unlocked': !lock}">
                                 <div class="lock-head"></div>
                                 <div class="lock-body">
                                     <div class="lock-body__form">
                                         <input type="number" min="0" max="9" placeholder="0" (keyup)="keytab($event)"/>
                                         <input type="number" min="0" max="9" placeholder="0" (keyup)="keytab($event)"/>
-                                        <input type="number" min="0" max="9" placeholder="0" (keyup)="keytab($event)"/>
+                                        <input type="number" min="0" max="9" placeholder="0" (keyup)="keytab($event)" />
                                         <p>%</p>
                                     </div>
                                 </div>
@@ -203,7 +204,7 @@
                         <div class="box__success-wrap">
                             <a href="" class="box__success-link">https://bloks.io/transaction/04fba95d723a1183bb…</a>
                             <!--<div class="box__success-button" >Repeat transaction</div>-->
-                            <div class="box__success-button light">Choose different token</div>
+                            <div class="box__success-button light" (click)="onChooseToken()">Choose different token</div>
                         </div>
                     </div>
                 </div>
