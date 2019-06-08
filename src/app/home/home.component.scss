@@ -99,7 +99,7 @@ $blue-color: #0F59D1;
   height: 100%;
   display: flex;
   align-items: center;
-  padding: 95px 0 15px 25px;
+  padding: 95px 0 15px 0;
 }
 .content-wrap{
   position: relative;
@@ -240,6 +240,7 @@ $blue-color: #0F59D1;
     border: 1px solid #FFFFFF;
     border-radius: 50%;
     margin: 0 15px 0 0;
+    background: url(../../assets/images/arrow-right.svg);
   }
   p{
     font-family: 'avenirregular';
@@ -331,10 +332,11 @@ $blue-color: #0F59D1;
 }
 
 .box__head{
+  position: relative;
   display: flex;
   width: 100%;
   padding: 15px;
-  height: 80px;
+  height: 59px;
   align-items: center;
   background: #EBEBEB;
   justify-content: center;
@@ -343,6 +345,24 @@ $blue-color: #0F59D1;
     font-size: 24px;
     text-align: center;
   }
+}
+.box__head-button{
+  position: absolute;
+  font-family: 'avenirregular';
+  top: 15px;
+  right: 15px;
+  padding: 10px 20px 6px 20px;
+  font-size: 14px;
+  line-height: 1;
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffc597+0,ffdc93+100 */
+  background: rgb(255,197,151); /* Old browsers */
+  background: -moz-linear-gradient(left,  rgba(255,197,151,1) 0%, rgba(255,220,147,1) 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(left,  rgba(255,197,151,1) 0%,rgba(255,220,147,1) 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to right,  rgba(255,197,151,1) 0%,rgba(255,220,147,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc597', endColorstr='#ffdc93',GradientType=1 ); /* IE6-9 */
+  color: $blue-color;
+  border-radius: 30px;
+  cursor: pointer;
 }
 
 .box__success{
@@ -401,6 +421,173 @@ $blue-color: #0F59D1;
   margin-bottom: 25px;
 }
 
+.box__statistic-body{
+  position: relative;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  overflow: hidden;
+}
+.box__statistic-chart{
+  display: block;
+  margin: auto;
+}
+.box__statistic-nav{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.box__statistic-button{
+  width: 45px;
+  height: 100px;
+  background: $blue-color;
+  border-radius: 5px 0 0 5px;
+  margin: 5px 0;
+  cursor: pointer;
+  transition: .3s;
+  transform: translate3d(7px,0,0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  p{
+    font-family: 'avenirregular';
+    color: #FFFFFF;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+    transform: rotate(-90deg);
+  }
+  &:hover{
+    width: 44px;
+    transform: translate3d(1px,0,0);
+  }
+  &.gray{
+    background: #C0C0C0;
+    p{
+      color: #000000;
+    }
+  }
+}
+
+.box__lock-body{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.lock{
+  position: relative;
+  width: 200px;
+  height: 300px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  margin-bottom: 25px;
+}
+.lock-body{
+  position: relative;
+  width: 100%;
+  height: 180px;
+  background: $blue-color;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+.lock-body__form{
+  width: 130px;
+  height: 65px;
+  display: flex;
+  input{
+    font-family: 'orbitron_mediumregular';
+    font-size: 16px;
+    width: 100%;
+    height: 100%;
+    background: #FFFFFF;
+    margin: 0 3px;
+    border-radius: 8px;
+    border: none;
+    text-align: center;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0
+    }
+    &[type=number] {
+      -moz-appearance:textfield; /* Firefox */
+    }
+  }
+  p{
+    font-family: 'avenirregular';
+    color: #FFFFFF;
+    font-size: 18px;
+    line-height: 1;
+    align-self: center;
+  }
+}
+.lock-head{
+  position: absolute;
+  top: 0;
+  right: -20px;
+  width: 93px;
+  height: 133px;
+  background: url(../../assets/images/lock-head.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+.lock-info{
+  font-family: 'avenirregular';
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.lock-info__item{
+  width: 100%;
+  margin-bottom: 5px;
+  font-size: 21px;
+  color: #000000;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 40px;
+  input{
+    font-family: "avenirregular";
+    border: none;
+    font-size: 21px;
+    line-height: 21px;
+    width: 85px;
+    margin-right: -10px;
+    padding: 7px 10px 3px 0;
+    text-align: right;
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffc597+0,ffdc93+100 */
+    background: rgb(255,197,151); /* Old browsers */
+    background: -moz-linear-gradient(left,  rgba(255,197,151,1) 0%, rgba(255,220,147,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(left,  rgba(255,197,151,1) 0%,rgba(255,220,147,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to right,  rgba(255,197,151,1) 0%,rgba(255,220,147,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc597', endColorstr='#ffdc93',GradientType=1 ); /* IE6-9 */
+    color: $blue-color;
+    border-radius: 30px;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0
+    }
+    &[type=number] {
+      -moz-appearance:textfield;
+    }
+  }
+}
 
 @media screen and (max-height: 600px){
   .box__welcome-wrap{

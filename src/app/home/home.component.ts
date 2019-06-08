@@ -44,8 +44,25 @@ export class HomeComponent implements OnInit{
     },
     "5": {
       visible: false
+    },
+    "6": {
+      visible: false
+    },
+    "7": {
+      visible: false
     }
   };
+
+  pieData: any[] = [
+    {
+      "name": "Unlocked",
+      "value": 100
+    },
+    {
+      "name": "Locked",
+      "value": 300
+    },
+  ];
 
   visibleBoxes:number = 0;
 
@@ -96,6 +113,19 @@ export class HomeComponent implements OnInit{
         }
       }
     }
+  }
+
+
+  keytab(event){
+    let nextInput = event.srcElement.nextElementSibling; // get the sibling element
+    let target = event.target || event.srcElement;
+    let id = target.id;
+    console.log(id.maxlength);
+
+    if(nextInput == null)
+      return;
+    else
+      nextInput.focus();
   }
 
 }
