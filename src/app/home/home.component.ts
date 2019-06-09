@@ -204,7 +204,8 @@ export class HomeComponent implements OnInit {
     }
 
     scrollToCard(number) {
-        this.scrollEl.directiveRef.scrollToX(number * 650, 400)
+        //scroll to center car position
+        this.scrollEl.directiveRef.scrollToX(number * this.cardWidth, 400)
     }
 
     setBoxVisible(id: number) {
@@ -235,6 +236,7 @@ export class HomeComponent implements OnInit {
     }
 
     onLock(val: boolean) {
+        //start animation after 800ms or 0ms
         let timeOut = this.boxes[4].visible ? 0 : 800;
         setTimeout(() => {
             this.lock = val;

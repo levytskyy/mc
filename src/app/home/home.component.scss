@@ -164,6 +164,14 @@ $blue-color: #0F59D1;
     background: #FFFFFF;
     z-index: 6;
   }
+  &-6{
+    background: #FFFFFF;
+    z-index: 5;
+  }
+  &-7{
+    background: #FFFFFF;
+    z-index: 4;
+  }
 }
 
 .box__welcome{
@@ -325,6 +333,36 @@ $blue-color: #0F59D1;
   border-radius: 50%;
   margin: 0 15px 0 0;
 }
+.box__tokens-head{
+  font-family: 'avenirregular';
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  align-items: center;
+  p{
+    color: #000000;
+    font-size: 16px;
+    margin: 0 15px 0 0;
+  }
+}
+.box__tokens-head_button{
+  color: $blue-color;
+  border: 1px solid $blue-color;
+  border-radius: 35px;
+  padding: 6px 14px 4px 14px;
+  font-size: 14px;
+  line-height: 1;
+  text-align: center;
+  margin: 0 5px;
+  cursor: pointer;
+  transition: .3s;
+  &:hover{
+    border: 1px solid rgb(255,197,151);
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffc597+0,ffdc93+100 */
+    background: rgb(255,197,151); /* Old browsers */
+  }
+}
 
 .box__statistic{
 
@@ -334,6 +372,21 @@ $blue-color: #0F59D1;
 }
 .box__package-body{
   padding: 20px;
+}
+.box__package-button{
+  font-family: 'avenirregular';
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 1;
+  padding: 14px 25px 11px 25px;
+  border-radius: 35px;
+  border: none;
+  text-align: center;
+  margin: 15px auto;
+  width: 100%;
+  max-width: 320px;
+  background:  $blue-color;
+  cursor: pointer;
 }
 
 .box__head{
@@ -345,12 +398,23 @@ $blue-color: #0F59D1;
   align-items: center;
   background: #EBEBEB;
   justify-content: center;
-  flex-direction: column;
+  //flex-direction: column;
   p{
     font-size: 24px;
     text-align: center;
+    flex: 1;
+    line-height: 1;
   }
 }
+.box__head-icon{
+  width: 40px;
+  height: 40px;
+  background-color: #0F59D1;
+  border-radius: 50%;
+  margin: 0 15px 0 0;
+}
+
+
 .box__head-button{
   position: absolute;
   font-family: 'avenirregular';
@@ -581,6 +645,7 @@ $blue-color: #0F59D1;
   display: flex;
   justify-content: space-between;
   padding: 0 40px;
+  align-items: center;
   input{
     font-family: "avenirregular";
     border: none;
@@ -608,6 +673,62 @@ $blue-color: #0F59D1;
     }
   }
 }
+.box__contactus{
+
+}
+.box__contact{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  p{
+    font-family: 'avenirregular';
+    color: $blue-color;
+    font-size: 24px;
+    line-height: 1.5;
+    max-width: 360px;
+    width: 100%;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+}
+.box__contact-field{
+  display: flex;
+  width: 100%;
+  &.align-right{
+    justify-content: flex-end;
+  }
+  input, textarea{
+    font-family: 'avenirregular';
+    width: 100%;
+    border: 1px solid #979797;
+    border-radius: 5px;
+    padding: 15px 15px;
+    font-size: 16px;
+    margin: 10px 0;
+  }
+  textarea{
+    min-height: 140px;
+    resize: none;
+  }
+}
+.box__contact-button{
+  font-family: 'avenirregular';
+  padding: 10px 35px;
+  background: #0F59D1;
+  border-radius: 610px;
+  cursor: pointer;
+  color: #FFFFFF;
+  font-size: 16px;
+}
+
+@media screen and (max-width: 980px){
+  .box__welcome-wrap{
+    padding: 40px 90px;
+  }
+}
 
 @media screen and (max-width: 650px){
   .panel{
@@ -628,6 +749,11 @@ $blue-color: #0F59D1;
   }
   .box__welcome-button{
     margin-bottom: 20px;
+  }
+  .box__head{
+    p{
+      font-size: 21px;
+    }
   }
 }
 

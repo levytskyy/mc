@@ -43,6 +43,13 @@
                          [ngStyle]="{'width': cardWidth + 'px'}"
                          *ngIf="boxes[2].visible"
                          [@enterAnimation]>
+                        <div class="box__tokens-head">
+                            <p class="box__tokens-head_label">Filter by:</p>
+                            <div class="box__tokens-head_button">My tokens</div>
+                            <div class="box__tokens-head_button">Service1</div>
+                            <div class="box__tokens-head_button">Service2</div>
+                            <div class="box__tokens-head_button">Service3</div>
+                        </div>
                         <div class="token__list">
                             <div class="token__list-scroll">
                                 <div class="token__list-item"
@@ -62,6 +69,7 @@
                          *ngIf="boxes[3].visible"
                          [@enterAnimation]>
                         <div class="box__head">
+                            <div class="box__head-icon"></div>
                             <p>Token 1 - Stats</p>
                         </div>
                         <div class="box__statistic-body">
@@ -91,6 +99,7 @@
                          *ngIf="boxes[4].visible"
                          [@enterAnimation]>
                         <div class="box__head">
+                            <div class="box__head-icon"></div>
                             <p>Token 1 - LOCK</p>
                             <div class="box__head-button" (click)="onNextCard(5)">SIGN</div>
                         </div>
@@ -128,6 +137,7 @@
                          *ngIf="boxes[5].visible"
                          [@enterAnimation]>
                         <div class="box__head">
+                            <div class="box__head-icon"></div>
                             <p>Token 1 - Choose a Package</p>
                         </div>
                         <div class="box__package-body">
@@ -155,6 +165,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="box__package-button">
+                                Subscribe
+                            </div>
                         </div>
                     </div>
                     <div class="box box__success box-6"
@@ -166,8 +179,31 @@
                         </div>
                         <div class="box__success-wrap">
                             <a href="" class="box__success-link">https://bloks.io/transaction/04fba95d723a1183bb…</a>
-                            <!--<div class="box__success-button" >Repeat transaction</div>-->
-                            <div class="box__success-button light" (click)="onChooseToken()">Choose different token</div>
+                            <div class="box__success-button" (click)="onChooseToken()">Choose different token</div>
+                            <div class="box__success-button light" (click)="onNextCard(7)">Contact Us</div>
+                        </div>
+                    </div>
+                    <div class="box box__contactus box-7"
+                         [ngStyle]="{'width': cardWidth + 'px'}"
+                         *ngIf="boxes[7].visible"
+                         [@enterAnimation]>
+                        <div class="box__head">
+                            <p>Found what you wanted?</p>
+                        </div>
+                        <div class="box__contact">
+                            <p>
+                                If not, please let us know!
+                                Any feedback is appreciated :)
+                            </p>
+                            <div class="box__contact-field">
+                                <input type="text" placeholder="Your @nic on Telegram">
+                            </div>
+                            <div class="box__contact-field">
+                                <textarea placeholder="Type text"></textarea>
+                            </div>
+                            <div class="box__contact-field align-right">
+                                <div class="box__contact-button">Send</div>
+                            </div>
                         </div>
                     </div>
                 </div>
