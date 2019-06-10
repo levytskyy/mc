@@ -275,9 +275,9 @@ $blue-color: #0F59D1;
 }
 .token__list-item{
   position: relative;
-  padding: 15px 25px;
+  padding: 5px 25px;
   border-bottom: 1px solid #C0C0C0;
-  height: 60px;
+  height: 43px;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -318,7 +318,7 @@ $blue-color: #0F59D1;
 }
 .token__list-scroll{
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
 }
 .token__list-item_wrap{
   position: relative;
@@ -327,8 +327,8 @@ $blue-color: #0F59D1;
   align-items: center;
 }
 .token__list-icon{
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   background-color: #0F59D1;
   border-radius: 50%;
   margin: 0 15px 0 0;

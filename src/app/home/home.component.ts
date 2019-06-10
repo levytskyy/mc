@@ -3,11 +3,17 @@ import {trigger, transition, animate, style, state} from '@angular/animations'
 import {PerfectScrollbarComponent} from 'ngx-perfect-scrollbar';
 import {isPlatformBrowser} from '@angular/common';
 
+import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
+import {map, catchError} from "rxjs/operators";
+
+import {ScatterService} from '../services/scatter.services'
+
 @Component({
     selector: 'app-home',
     templateUrl: 'home.component.html',
     styleUrls: ['home.component.scss'],
     encapsulation: ViewEncapsulation.Emulated,
+    providers: [ScatterService],
     animations: [
         trigger(
             'enterAnimation', [
@@ -68,97 +74,10 @@ export class HomeComponent implements OnInit {
 
     cardWidth: number = 650;
 
-    data: any = [{
-                    "provider": "abcdefghijkl",
-                    "api_endpoint": "35.228.3.170:3115",
-                    "total_locked": "50000000000000000",
-                    "logo": {
-                        "logo_256": "https://...",
-                        "logo_1024": "https://...",
-                        "logo_svg": "https://..."
-                    },
-                    "services": [
-                        {
-                            "name": "cronservices",
-                            "locked": "100000.0000 XXX",
-                            "packages": [
-                                {
-                                    "package_id": "silver",
-                                    "quota": "1.0000 QUOTA",
-                                    "package_period": 86400,
-                                    "min_period": 3600,
-                                    "expiration": 0,
-                                    "service_level_agreement": {
-                                        "availability": {
-                                            "uptime_9s": 5
-                                        },
-                                        "performance": {
-                                            "95": 500,
-                                        },
-                                    },
-                                    "pinning": {
-                                        "ttl": 2400,
-                                        "public": false
-                                    },
-                                    "locations": [
-                                        {
-                                            "name": "Virgina",
-                                            "country": "US",
-                                            "latitude": 37.926868,
-                                            "longitude": -78.024902
-                                        }
-                                    ],
-                                },
-                            ]
-                        },
-                    ]
-                },
-                {
-                    "provider": "asdfdghjkhjgf",
-                    "api_endpoint": "35.228.3.170:3115",
-                    "total_locked": "50000000000000000",
-                    "logo": {
-                        "logo_256": "https://...",
-                        "logo_1024": "https://...",
-                        "logo_svg": "https://..."
-                    },
-                    "services": [
-                        {
-                            "name": "cronservices",
-                            "locked": "100000.0000 XXX",
-                            "packages": [
-                                {
-                                    "package_id": "silver",
-                                    "quota": "1.0000 QUOTA",
-                                    "package_period": 86400,
-                                    "min_period": 3600,
-                                    "expiration": 0,
-                                    "service_level_agreement": {
-                                        "availability": {
-                                            "uptime_9s": 5
-                                        },
-                                        "performance": {
-                                            "95": 500,
-                                        },
-                                    },
-                                    "pinning": {
-                                        "ttl": 2400,
-                                        "public": false
-                                    },
-                                    "locations": [
-                                        {
-                                            "name": "Virgina",
-                                            "country": "US",
-                                            "latitude": 37.926868,
-                                            "longitude": -78.024902
-                                        }
-                                    ],
-                                },
-                            ]
-                        },
-                    ]
-                },
-          ];
+    data: any = [];
+
+
+    isLoading:boolean = false;
 
     @HostListener('window:resize', ['$event'])
     onResize(event?) {
@@ -168,7 +87,9 @@ export class HomeComponent implements OnInit {
         }
     }
 
-    constructor(@Inject(PLATFORM_ID) platformId: string) {
+    constructor(@Inject(PLATFORM_ID) platformId: string,
+                public http: HttpClient,
+                public scatterService: ScatterService) {
         this.isBrowser = isPlatformBrowser(platformId);
         if (this.isBrowser) {
             this.screenWidth = window.innerWidth;
@@ -183,10 +104,16 @@ export class HomeComponent implements OnInit {
     }
 
     onScatter() {
-        this.setBoxVisible(2);
-        setTimeout(() => {
-            this.scrollToCard(1)
-        }, 100);
+        this.isLoading = true;
+        this.scatterService.getData().then(data => {
+            this.isLoading = false;
+            this.data = data.providers;
+            this.setBoxVisible(2);
+            setTimeout(() => {
+                this.scrollToCard(1)
+            }, 100);
+
+        });
     }
 
     onGetToken() {
@@ -253,6 +180,8 @@ export class HomeComponent implements OnInit {
             nextInput.focus();
         }
     }
+
+
 
 
 }
