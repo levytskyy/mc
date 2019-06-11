@@ -3,8 +3,7 @@ import {trigger, transition, animate, style, state} from '@angular/animations'
 import {PerfectScrollbarComponent} from 'ngx-perfect-scrollbar';
 import {isPlatformBrowser} from '@angular/common';
 
-import {HttpClient, HttpParams, HttpHeaders} from '@angular/common/http';
-import {map, catchError} from "rxjs/operators";
+
 
 import {ScatterService} from '../services/scatter.services'
 
@@ -63,21 +62,24 @@ export class HomeComponent implements OnInit {
 
     pieData: any[] = [
         {
-            "name": "Unlocked",
-            "value": 100
+            "name": "Users",
+            "value": 0
         },
         {
-            "name": "Locked",
-            "value": 300
+            "name": "Users",
+            "value": 0
         },
     ];
 
     cardWidth: number = 650;
 
-    data: any = [];
+
+    data: any;
+    currentProvider:any;
 
 
     isLoading:boolean = false;
+
 
     @HostListener('window:resize', ['$event'])
     onResize(event?) {
@@ -88,7 +90,6 @@ export class HomeComponent implements OnInit {
     }
 
     constructor(@Inject(PLATFORM_ID) platformId: string,
-                public http: HttpClient,
                 public scatterService: ScatterService) {
         this.isBrowser = isPlatformBrowser(platformId);
         if (this.isBrowser) {
@@ -100,27 +101,69 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
-
+       /* this.scatterService.getData().then(data => {
+            console.log(data);
+        });*/
     }
 
     onScatter() {
         this.isLoading = true;
         this.scatterService.getData().then(data => {
             this.isLoading = false;
-            this.data = data.providers;
+
+            console.log(data);
+
+            this.data = data;
+
             this.setBoxVisible(2);
             setTimeout(() => {
                 this.scrollToCard(1)
             }, 100);
-
         });
+
+
+       /*
+        this.scatterService.get_table_package().then(data => {
+
+        });*/
     }
 
-    onGetToken() {
+    onProvider(item:number) {
+        this.currentProvider = item;
+
+        console.log(this.currentProvider);
+        this.onSelectTypePipe(1);
+
         this.setBoxVisible(3);
         setTimeout(() => {
             this.scrollToCard(2)
         }, 100);
+    }
+
+    onSelectTypePipe(type){
+        this.pieData = [];
+        if(type == 1){
+            this.pieData.push({
+                name: 'All Users',
+                value: this.data['users'] || 10
+            });
+            this.pieData.push({
+                name: 'Current Users',
+                value: this.currentProvider['users'] || 10
+            });
+        }else if(type == 2){
+            this.pieData.push({
+                name: 'All Users',
+                value: this.data['staked'] || 10
+            });
+            this.pieData.push({
+                name: 'Current staked',
+                value: this.currentProvider['staked'] || 10
+            });
+        }
+
+        console.log(this.pieData);
+
     }
 
     onNextCard(id) {
@@ -179,6 +222,12 @@ export class HomeComponent implements OnInit {
         } else {
             nextInput.focus();
         }
+    }
+
+
+    roundNumber(number){
+        if(!number) return;
+        return Math.round(parseFloat(number));
     }
 
 

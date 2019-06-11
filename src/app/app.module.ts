@@ -16,7 +16,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   //suppressScrollX: true,
   //suppressScrollY: true,
   //useBothWheelAxes: true
-  //wheelPropagation: true
+  //nwheelPropagation: true
 };
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
