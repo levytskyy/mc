@@ -15,11 +15,12 @@ import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   //suppressScrollX: true,
   //suppressScrollY: true,
-  //useBothWheelAxes: true
-  //nwheelPropagation: true
+  useBothWheelAxes: true
+  //wheelPropagation: true
 };
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -32,12 +33,16 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     BrowserAnimationsModule,
     HttpClientModule,
     NgxChartsModule,
+    MatExpansionModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full'},
       { path: 'lazy', loadChildren: './lazy/lazy.module#LazyModule'},
       { path: 'lazy/nested', loadChildren: './lazy/lazy.module#LazyModule'}
     ]),
     TransferHttpCacheModule,
+  ],
+  exports:[
+    MatExpansionModule
   ],
   providers: [
     {

@@ -90,8 +90,12 @@
                         </div>
                         <div class="box__statistic-body" *ngIf="currentProvider">
                             <div class="box__statistic-tab">
-                                <button class="active" (click)="onSelectTypePipe(1)">Users</button>
-                                <button (click)="onSelectTypePipe(2)">Staked</button>
+                                <button
+                                        [ngClass]="{'active': pieData[0]['type'] == 1}"
+                                        (click)="onSelectTypePipe(1)">Users</button>
+                                <button
+                                        [ngClass]="{'active': pieData[0]['type'] == 2}"
+                                        (click)="onSelectTypePipe(2)">Staked</button>
                             </div>
                             <ngx-charts-pie-chart
                                     class="box__statistic-chart"
@@ -102,29 +106,79 @@
                                     [legend]="true">
                             </ngx-charts-pie-chart>
                             <div class="box__statistic-nav">
+                                <div class="box__statistic-button package"
+                                     (click)="onNextCard(4);">
+                                    <p>Choose Package</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="box box__package box-4"
+                         [ngStyle]="{'width': cardWidth + 'px'}"
+                         *ngIf="boxes[4].visible"
+                         [@enterAnimation]>
+                        <div class="box__head">
+                            <img class="box__head-icon"
+                                 *ngIf="currentProvider['logo'] != 'N/A'"
+                                 [src]="currentProvider['logo']['logo_svg']">
+                            <p>{{ currentProvider ? currentProvider['provider'] : '' }} - Choose a Package</p>
+                        </div>
+                        <div class="box__package-body">
+                            <div class="token__list">
+                                <div class="token__list-scroll" *ngIf="currentProvider">
+                                    <mat-accordion [multi]="false">
+                                        <mat-expansion-panel class="accordion-item"
+                                                             *ngFor="let item of currentProvider['services']">
+                                            <mat-expansion-panel-header  collapsedHeight="*" expandedHeight="*">
+                                                <div class="accordion-item__head">
+                                                    <p>{{ item.service }}</p>
+                                                </div>
+                                            </mat-expansion-panel-header>
+
+                                            <div class="accordion-sub__wrap"
+                                                 *ngIf="item['packages'] && item['packages'].length">
+                                                <div class="accordion-sub__item"
+                                                     *ngFor="let pack of item['packages']"
+                                                     [ngClass]="{'active': pack['package_id'] == currentIdPackage}"
+                                                     (click)="setCurrentIdPackage(pack['package_id'])">
+                                                    <p>{{ pack.name }}</p>
+                                                </div>
+                                            </div>
+
+                                        </mat-expansion-panel>
+                                    </mat-accordion>
+                                </div>
+                            </div>
+                            <div class="box__package-button"
+                                 [ngClass]="{'no-active': !currentIdPackage}">
+                                Select
+                            </div>
+
+                            <div class="box__statistic-nav">
                                 <div class="box__statistic-button gray"
-                                     (click)="onLock(true);onNextCard(4);">
+                                     (click)="onLock(true);onNextCard(5);">
                                     <p>Locked</p>
                                 </div>
                                 <div class="box__statistic-button"
-                                     (click)=" onLock(false);onNextCard(4);">
+                                     (click)=" onLock(false);onNextCard(5);">
                                     <p>Unlocked</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="box box__lock box-4"
+                    <div class="box box__lock box-5"
                          [ngStyle]="{'width': cardWidth + 'px'}"
-                         *ngIf="boxes[4].visible"
+                         *ngIf="boxes[5].visible"
                          [@enterAnimation]>
                         <div class="box__head">
                             <div class="box__head-icon"></div>
                             <p>Token 1 - LOCK</p>
-                            <div class="box__head-button" (click)="onNextCard(5)">SIGN</div>
+                            <div class="box__head-button" (click)="onNextCard(6)">SIGN</div>
                         </div>
                         <div class="box__lock-body">
                             <div class="lock"
-                            [ngClass]="{'locked': lock, 'unlocked': !lock}">
+                                 [ngClass]="{'locked': lock, 'unlocked': !lock}">
                                 <div class="lock-head"></div>
                                 <div class="lock-body">
                                     <div class="lock-body__form">
@@ -151,44 +205,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="box box__package box-5"
-                         [ngStyle]="{'width': cardWidth + 'px'}"
-                         *ngIf="boxes[5].visible"
-                         [@enterAnimation]>
-                        <div class="box__head">
-                            <div class="box__head-icon"></div>
-                            <p>Token 1 - Choose a Package</p>
-                        </div>
-                        <div class="box__package-body">
-                            <div class="token__list">
-                                <div class="token__list-scroll">
-                                    <div class="token__list-item" (click)="onNextCard(6)">
-                                        <div class="token__list-item_wrap">
-                                            <p>Headline</p>
-                                        </div>
-                                    </div>
-                                    <div class="token__list-item" (click)="onNextCard(6)">
-                                        <div class="token__list-item_wrap">
-                                            <p>Headline</p>
-                                        </div>
-                                    </div>
-                                    <div class="token__list-item" (click)="onNextCard(6)">
-                                        <div class="token__list-item_wrap">
-                                            <p>Headline</p>
-                                        </div>
-                                    </div>
-                                    <div class="token__list-item">
-                                        <div class="token__list-item_wrap">
-                                            <p>Headline</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="box__package-button">
-                                Subscribe
-                            </div>
-                        </div>
-                    </div>
                     <div class="box box__success box-6"
                          [ngStyle]="{'width': cardWidth + 'px'}"
                          *ngIf="boxes[6].visible"
@@ -199,10 +215,12 @@
                         <div class="box__success-wrap">
                             <a href="" class="box__success-link">https://bloks.io/transaction/04fba95d723a1183bb…</a>
                             <div class="box__success-button" (click)="onChooseToken()">Choose different token</div>
-                            <div class="box__success-button light" (click)="onNextCard(7)">Contact Us</div>
+                            <a href="https://telegram.me/levytskyy"
+                               target="_blank"
+                               class="box__success-button light" >Telegram Channel</a>
                         </div>
                     </div>
-                    <div class="box box__contactus box-7"
+                    <!--<div class="box box__contactus box-7"
                          [ngStyle]="{'width': cardWidth + 'px'}"
                          *ngIf="boxes[7].visible"
                          [@enterAnimation]>
@@ -224,7 +242,7 @@
                                 <div class="box__contact-button">Send</div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
             </perfect-scrollbar>
 

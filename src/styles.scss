@@ -92,7 +92,7 @@ body, html{
   font-weight: normal;
   font-style: normal;
 }
-
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 .ps-content{
   height: 100%;
@@ -101,7 +101,22 @@ body, html{
   display: none!important;
 }
 
-
 .legend-labels{
   min-width: 140px;
+}
+
+.mat-expansion-panel-body{
+  margin: 0!important;
+  padding: 0!important;
+}
+.mat-expanded{
+  background: rgb(245, 245, 245)!important;
+}
+.mat-expansion-panel {
+  border-radius: 0;
+  box-shadow: none!important;
+  border-bottom: 1px solid silver;
+}
+.mat-expansion-panel-spacing{
+  margin: 0!important;
 }

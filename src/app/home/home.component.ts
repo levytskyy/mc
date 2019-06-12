@@ -54,20 +54,19 @@ export class HomeComponent implements OnInit {
         },
         "6": {
             visible: false
-        },
-        "7": {
-            visible: false
         }
     };
 
     pieData: any[] = [
         {
-            "name": "Users",
-            "value": 0
+            "name": "All Users",
+            "value": 0,
+            "type": 1,
         },
         {
-            "name": "Users",
-            "value": 0
+            "name": "Current Users",
+            "value": 0,
+            "type": 1,
         },
     ];
 
@@ -76,6 +75,7 @@ export class HomeComponent implements OnInit {
 
     data: any;
     currentProvider:any;
+    currentIdPackage:any;
 
 
     isLoading:boolean = false;
@@ -143,27 +143,32 @@ export class HomeComponent implements OnInit {
     onSelectTypePipe(type){
         this.pieData = [];
         if(type == 1){
-            this.pieData.push({
-                name: 'All Users',
-                value: this.data['users'] || 10
-            });
-            this.pieData.push({
-                name: 'Current Users',
-                value: this.currentProvider['users'] || 10
-            });
+            this.pieData.push(
+                {
+                    name: 'All Users',
+                    value: this.data['users'] || 10,
+                    type: 1,
+                },{
+                    name: 'Current Users',
+                    value: this.currentProvider['users'] || 10,
+                    type: 2
+                }
+            );
+
         }else if(type == 2){
-            this.pieData.push({
-                name: 'All Users',
-                value: this.data['staked'] || 10
-            });
-            this.pieData.push({
-                name: 'Current staked',
-                value: this.currentProvider['staked'] || 10
-            });
+            this.pieData.push(
+                {
+                    name: 'All staked',
+                    value: this.data['staked'] || 10,
+                    type: 2,
+                },{
+                    name: 'Current staked',
+                    value: this.currentProvider['staked'] || 10,
+                    type: 2
+                });
         }
 
         console.log(this.pieData);
-
     }
 
     onNextCard(id) {
@@ -211,6 +216,11 @@ export class HomeComponent implements OnInit {
         setTimeout(() => {
             this.lock = val;
         }, timeOut);
+    }
+
+    setCurrentIdPackage(id){
+        if(!id) return;
+        this.currentIdPackage = id;
     }
 
     keytab(event) {
