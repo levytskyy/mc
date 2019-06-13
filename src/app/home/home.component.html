@@ -22,14 +22,13 @@
                             <span class="box__welcome-title">
                                 No more Exuses
                             </span>
-                            <span class="box__welcome-description">
+                            <span class="box__welcome-description" (click)="buttonWebViewServices.always()">
                                 Welcome to MISSION CONTROL
                                 where you now have a say
                                 in the direction AND momentum
                                 your tokens:
                             </span>
                             <div class="box__welcome-button" id="ual-div"></div>
-
 
                             <div class="box__welcome_full">
                                 <div class="box__welcome__get-all" (click)="!isLoading ? onScatter() : null">
@@ -61,13 +60,16 @@
                             <perfect-scrollbar class="token__list-scroll">
                                 <div class="token__list-item"
                                      *ngFor="let item of data['providers']"
-                                     (click)="onProvider(item)">
+                                     (click)="item.enabled != 0 ? onProvider(item) : null"
+                                    [ngClass]="{'disabled':item.enabled == 0}">
                                     <div class="token__list-item_wrap">
                                         <div class="token__list-item_first">
-                                            <div *ngIf="item.logo == 'N/A'" class="token__list-icon">{{ item.logo }}</div>
-                                            <img class="token__list-icon"
-                                                 *ngIf="item.logo != 'N/A'"
-                                                 [src]="item['logo']['logo_svg']"/>
+                                            <!--<ng-container *ngIf="item.logo">
+                                                <img class="token__list-icon"
+                                                     *ngIf="item.logo != 'N/A'"
+                                                     [src]="item['logo']['logo_svg']"
+                                            </ng-container>-->
+
                                             <p>{{ item.provider }}</p>
                                         </div>
                                         <div><p>{{ item.services ? item.services.length : 0 }}</p></div>
@@ -83,9 +85,9 @@
                          *ngIf="boxes[3].visible"
                          [@enterAnimation]>
                         <div class="box__head" *ngIf="currentProvider">
-                            <img class="box__head-icon"
+                            <!--<img class="box__head-icon"
                                  *ngIf="currentProvider['logo'] != 'N/A'"
-                                 [src]="currentProvider['logo']['logo_svg']">
+                                 [src]="currentProvider['logo']['logo_svg']">-->
                             <p>{{ currentProvider ? currentProvider['provider'] : '' }} - Stats</p>
                         </div>
                         <div class="box__statistic-body" *ngIf="currentProvider">
@@ -120,9 +122,9 @@
                          *ngIf="boxes[4].visible"
                          [@enterAnimation]>
                         <div class="box__head">
-                            <img class="box__head-icon"
+                            <!--<img class="box__head-icon"
                                  *ngIf="currentProvider['logo'] != 'N/A'"
-                                 [src]="currentProvider['logo']['logo_svg']">
+                                 [src]="currentProvider['logo']['logo_svg']">-->
                             <p>{{ currentProvider ? currentProvider['provider'] : '' }} - Choose a Package</p>
                         </div>
                         <div class="box__package-body">
@@ -141,8 +143,8 @@
                                                  *ngIf="item['packages'] && item['packages'].length">
                                                 <div class="accordion-sub__item"
                                                      *ngFor="let pack of item['packages']"
-                                                     [ngClass]="{'active': pack['package_id'] == currentIdPackage}"
-                                                     (click)="setCurrentIdPackage(pack['package_id'])">
+                                                     [ngClass]="{'active': pack['package_id'] == selectedPackage['service']}"
+                                                     (click)="setCurrentIdPackage(item['service'], pack['package_id'])">
                                                     <p>{{ pack['name'] || pack['package_id'] }}</p>
                                                 </div>
                                             </div>
@@ -152,18 +154,23 @@
                                 </div>
                             </div>
                             <div class="box__package-button"
-                                 [ngClass]="{'no-active': !currentIdPackage}">
+                                 (click)="selectedPackage['service'] ? onSelect() : null"
+                                 [ngClass]="{'no-active': !selectedPackage['service']}">
+
+                                <div class="spinner"><div class="spinner-icon"></div></div>
+
                                 Select
                             </div>
 
                             <div class="box__statistic-nav">
                                 <div class="box__statistic-button gray"
-                                     (click)="onLock(true);onNextCard(5);">
-                                    <p>Locked</p>
+                                     (click)="onStake();">
+                                    <p>Stake</p>
                                 </div>
                                 <div class="box__statistic-button"
-                                     (click)=" onLock(false);onNextCard(5);">
-                                    <p>Unlocked</p>
+                                     *ngIf="currentProvider['user_staked'] > 0"
+                                     (click)="onUnStake();">
+                                    <p>Unstake</p>
                                 </div>
                             </div>
                         </div>
@@ -183,9 +190,10 @@
                                 <div class="lock-head"></div>
                                 <div class="lock-body">
                                     <div class="lock-body__form">
+                                        <div class="input"></div>
+                                        <div class="input"></div>
+                                        <div class="input"></div>
                                         <input type="number" min="0" max="9" placeholder="0" (keyup)="keytab($event)"/>
-                                        <input type="number" min="0" max="9" placeholder="0" (keyup)="keytab($event)"/>
-                                        <input type="number" min="0" max="9" placeholder="0" (keyup)="keytab($event)" />
                                         <p>%</p>
                                     </div>
                                 </div>

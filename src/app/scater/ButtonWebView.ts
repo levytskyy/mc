@@ -149,6 +149,7 @@ async function once()
 
             found = false
             for (var k = 0; k < json['providers'][p]['services'][s]['packages'].length; k++ ) {
+              console.log(json);
               if (json['providers'][p]['services'][s]['service'][s]['packages'][k]['package_id'] === row['package_id']) {
                 found = true //PACKAGE FOUND
                 break //LEAVE THE PACKAGES LOOP
@@ -254,10 +255,18 @@ async function updateBalance() {
 
     const hodl = await client.get_dapphdl_accounts(accountName);
 
-    const { core_liquid_balance: balance } = data
-    balanceTag!.innerHTML = `Account Liquid Balance: ${balance}`
-    dappBalanceTag!.innerHTML = `Account DAPP Balance: ${dapp}`
-    hodlBalanceTag!.innerHTML = `Account DAPPHODL Balance: ${hodl}`
+    const { core_liquid_balance: balance } = data;
+    if(balanceTag){
+      balanceTag.innerHTML = `Account Liquid Balance: ${balance}`;
+    }
+
+    if(dappBalanceTag){
+      dappBalanceTag.innerHTML = `Account DAPP Balance: ${dapp}`;
+    }
+    if(hodlBalanceTag){
+      hodlBalanceTag.innerHTML = `Account DAPPHODL Balance: ${hodl}`;
+    }
+
 
     always()
 
@@ -366,6 +375,14 @@ function addSelectButtonEventListener() {
     const userAccountName = await loggedInUser.getAccountName()
     selectTransaction.actions[0].authorization[0].actor = userAccountName
     selectTransaction.actions[0].data.owner = userAccountName
+
+    //!! if user_staked > 0 - unlock
+
+
+    //run select after lock
+    selectTransaction.actions[0].data.provider = userAccountName
+    selectTransaction.actions[0].data.package = userAccountName
+    selectTransaction.actions[0].data.service = userAccountName
 
     loggedInUser.signTransaction(
       selectTransaction,

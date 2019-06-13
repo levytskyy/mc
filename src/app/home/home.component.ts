@@ -4,8 +4,9 @@ import {PerfectScrollbarComponent} from 'ngx-perfect-scrollbar';
 import {isPlatformBrowser} from '@angular/common';
 
 
-import {ScatterService} from '../services/scatter.services'
-import {ButtonWebViewServices} from '../scater/ButtonWebView.services'
+import {ScatterService} from '../services/scatter.services';
+import {ButtonWebViewServices} from '../scater/ButtonWebView.services';
+import {AuthService} from '../services/auth.services';
 
 @Component({
     selector: 'app-home',
@@ -75,8 +76,13 @@ export class HomeComponent implements OnInit {
 
     data: any;
     currentProvider:any;
-    currentIdPackage:any;
 
+
+    selectedPackage = {
+        provider: '',
+        package: '',
+        service: ''
+    };
 
     isLoading:boolean = false;
 
@@ -91,6 +97,7 @@ export class HomeComponent implements OnInit {
 
     constructor(@Inject(PLATFORM_ID) platformId: string,
                 public buttonWebViewServices: ButtonWebViewServices,
+                public authService: AuthService,
                 public scatterService: ScatterService) {
         this.isBrowser = isPlatformBrowser(platformId);
         if (this.isBrowser) {
@@ -106,6 +113,27 @@ export class HomeComponent implements OnInit {
        /* this.scatterService.getData().then(data => {
             console.log(data);
         });*/
+
+        this.authService.isAuth.subscribe(data => {
+
+            if (data == 'authorized') {
+                this.buttonWebViewServices.getData().then(data => {
+                    this.isLoading = false;
+
+                    this.data = data;
+                    this.buttonWebViewServices.always();
+
+                    console.log(data);
+
+                    this.setBoxVisible(2);
+                    setTimeout(() => {
+                        this.scrollToCard(1)
+                    }, 100);
+                });
+
+
+            }
+        });
     }
 
     onScatter() {
@@ -122,18 +150,17 @@ export class HomeComponent implements OnInit {
                 this.scrollToCard(1)
             }, 100);
         });
-
-
        /*
         this.scatterService.get_table_package().then(data => {
 
         });*/
     }
 
+
     onProvider(item:number) {
         this.currentProvider = item;
 
-        console.log(this.currentProvider);
+        console.log('currentProvider', this.currentProvider);
         this.onSelectTypePipe(1);
 
         this.setBoxVisible(3);
@@ -148,11 +175,11 @@ export class HomeComponent implements OnInit {
             this.pieData.push(
                 {
                     name: 'All Users',
-                    value: this.data['users'] || 10,
+                    value: this.data['users'],
                     type: 1,
                 },{
                     name: 'Current Users',
-                    value: this.currentProvider['users'] || 10,
+                    value: this.currentProvider['users'] ,
                     type: 2
                 }
             );
@@ -161,11 +188,11 @@ export class HomeComponent implements OnInit {
             this.pieData.push(
                 {
                     name: 'All staked',
-                    value: this.data['staked'] || 10,
+                    value: this.data['staked'],
                     type: 2,
                 },{
                     name: 'Current staked',
-                    value: this.currentProvider['staked'] || 10,
+                    value: this.currentProvider['staked'],
                     type: 2
                 });
         }
@@ -212,17 +239,34 @@ export class HomeComponent implements OnInit {
         this.boxes[2].visible = true; //show card
     }
 
-    onLock(val: boolean) {
+    onStake() {
+        this.onNextCard(5);
+        this.buttonWebViewServices.addStakeButtonEventListener();
+
         //start animation after 800ms or 0ms
         let timeOut = this.boxes[4].visible ? 0 : 800;
         setTimeout(() => {
-            this.lock = val;
+            this.lock = true;
         }, timeOut);
     }
+    onUnStake(){
+        this.onNextCard(5);
+        this.buttonWebViewServices.addUnstakeButtonEventListener();
 
-    setCurrentIdPackage(id){
-        if(!id) return;
-        this.currentIdPackage = id;
+        //start animation after 800ms or 0ms
+        let timeOut = this.boxes[4].visible ? 0 : 800;
+        setTimeout(() => {
+            this.lock = false;
+        }, timeOut);
+    }
+    onSelect(){
+        this.buttonWebViewServices.addSelectButtonEventListener(this.selectedPackage)
+    }
+
+    setCurrentIdPackage(serviceId, packageId){
+        this.selectedPackage['provider'] = this.currentProvider['provider'];
+        this.selectedPackage['package'] = packageId;
+        this.selectedPackage['service'] = serviceId;
     }
 
     keytab(event) {

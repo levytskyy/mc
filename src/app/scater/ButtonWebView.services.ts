@@ -15,13 +15,17 @@ import {MeetOne} from 'ual-meetone';
 import {Scatter} from 'ual-scatter';
 import {Lynx} from 'ual-lynx';
 
-
+import {AuthService} from '../services/auth.services';
 
 //TRANSACTION SCHEMAS
 import demoTransaction from './demo-transaction';
-/*import stakeTransaction from './stake-transaction'
-import unstakeTransaction from './unstake-transaction'
+import stakeTransaction from './stake-transaction';
+import unstakeTransaction from './unstake-transaction';
 import selectTransaction from './select-transaction'
+
+/*
+
+
 import hodlStakeTransaction from './hodl-stake-transaction'
 import hodlUnstakeTransaction from './hodl-unstake-transaction'*/
 
@@ -68,6 +72,11 @@ import * as $ from 'jquery';
 export class ButtonWebViewServices implements OnInit {
     isBrowser: boolean;
 
+    constructor(public http: HttpClient,
+                public authService:AuthService,
+                @Inject(PLATFORM_ID) platformId: string) {
+        this.isBrowser = isPlatformBrowser(platformId);
+    }
 
     userCallback = async(users: User[]) => {
         loggedInUser = users[0]
@@ -75,29 +84,25 @@ export class ButtonWebViewServices implements OnInit {
         console.info('Account Name:', await loggedInUser.getAccountName())
         console.info('Chain Id:', await loggedInUser.getChainId())
 
-        let self = this;
-        balanceUpdateInterval = setInterval(self.updateBalance, 1000);
+        let _self = this;
+        //balanceUpdateInterval = setInterval(self.updateBalance, 1000);
 
-        const transferDiv = document.getElementById('div-transfer');
-        transferDiv!.style.display = 'block';
-        this.once()
+
+        this.authService.onAuth('authorized');
     }
 
-    constructor(public http: HttpClient,
-                @Inject(PLATFORM_ID) platformId: string,) {
-        this.isBrowser = isPlatformBrowser(platformId);
-    }
+
 
 
     ngOnInit() {
 
-
     }
 
     init() {
+        let _self = this;
         $(function () {
             let ul = new UALJs(
-                this.userCallback,
+                _self.userCallback,
                 [exampleNet],
                 'DSP Mission Control',
                 [
@@ -109,6 +114,13 @@ export class ButtonWebViewServices implements OnInit {
                 ], {containerElement: $('#ual-div')[0]});
             ul.init();
         });
+    }
+
+    public getData() {
+        let self = this;
+        return new Promise((resolve) => {
+            resolve(self.once());
+        })
     }
 
     async once() {
@@ -152,7 +164,7 @@ export class ButtonWebViewServices implements OnInit {
             if (slash !== -1)
                 provider['website'] = uri.slice(8, slash)
 
-            var found = false
+            var found = false;
 
             for (var p = 0; p < json['providers'].length; p++) {
                 if (json['providers'][p]['provider'] === row['provider']) {
@@ -166,7 +178,7 @@ export class ButtonWebViewServices implements OnInit {
 
                             found = false
                             for (var k = 0; k < json['providers'][p]['services'][s]['packages'].length; k++) {
-                                if (json['providers'][p]['services'][s]['service'][s]['packages'][k]['package_id'] === row['package_id']) {
+                                if (json['providers'][p]['services'][s]['packages'][k]['package_id'] === row['package_id']) {
                                     found = true //PACKAGE FOUND
                                     break //LEAVE THE PACKAGES LOOP
                                 }
@@ -190,9 +202,10 @@ export class ButtonWebViewServices implements OnInit {
             if (found == false)
                 json['providers'].push(provider)
         }
+        return json;
     }
 
-    async  always() {
+    async always() {
         const response = await client.get_table_accountext({limit: 99999999999});
         const userAccountName = await loggedInUser.getAccountName()
 
@@ -239,10 +252,11 @@ export class ButtonWebViewServices implements OnInit {
                 }
             }
         }
+        console.log(json);
     }
 
 
-    async addTransferButtonEventListener() {
+    /*async addTransferButtonEventListener() {
         // Update our demo transaction to use the logged in user
         const userAccountName = await loggedInUser.getAccountName()
         demoTransaction.actions[0].authorization[0].actor = userAccountName
@@ -255,17 +269,65 @@ export class ButtonWebViewServices implements OnInit {
             const transaction = 'https://bloks.io/transaction/' + info.transaction['transaction_id']
             console.log(transaction)
         })
+    }*/
 
+    async addStakeButtonEventListener() {
+        // Update our demo transaction to use the logged in user
+        const userAccountName = await loggedInUser['accountName'];
+        stakeTransaction.actions[0].authorization[0].actor = userAccountName;
+        stakeTransaction.actions[0].data.from = userAccountName;
 
+        loggedInUser.signTransaction(
+            stakeTransaction,
+            { broadcast: true }
+        )
+    }
+
+    async addUnstakeButtonEventListener() {
+        // Update our demo transaction to use the logged in user
+        const userAccountName = await loggedInUser['accountName'];
+        unstakeTransaction.actions[0].authorization[0].actor = userAccountName;
+        unstakeTransaction.actions[0].data.to = userAccountName;
+
+        console.log(unstakeTransaction);
+        console.log(loggedInUser);
+
+        loggedInUser.signTransaction(
+            unstakeTransaction,
+            { broadcast: true }
+        )
+    }
+
+    addSelectButtonEventListener(data) {
+        if(!data) {
+            alert('Something went wrong. Try again');
+            return;
+        }
+        const userAccountName = loggedInUser['accountName'];
+        selectTransaction.actions[0].authorization[0].actor = userAccountName;
+        selectTransaction.actions[0].data.owner = userAccountName;
+
+        //run select after lock
+        selectTransaction.actions[0].data.provider = data['provider'];
+        selectTransaction.actions[0].data.package = data['package'];
+        selectTransaction.actions[0].data.service = data['service'];
+
+        loggedInUser.signTransaction(
+            selectTransaction,
+            { broadcast: true }
+        ).then(function (info) {
+            console.log(info)
+        })
     }
 
     async updateBalance() {
+        let _self = this;
         const balanceTag = document.getElementById('p-transfer')
         const dappBalanceTag = document.getElementById('p-dapp-balance')
         const hodlBalanceTag = document.getElementById('p-hodl-balance')
 
         try {
-            const rpc = new JsonRpc(`${EXAMPLE_ENV.RPC_PROTOCOL}://${EXAMPLE_ENV.RPC_HOST}:${EXAMPLE_ENV.RPC_PORT}`)
+            const rpc = new JsonRpc(`${exampleNet['rpcEndpoints'][0]['protocol']}://${exampleNet['rpcEndpoints'][0]['host']}:${exampleNet['rpcEndpoints'][0]['port']}`)
             const accountName = await loggedInUser.getAccountName()
             const data = await rpc.get_account(accountName)
             const code = 'dappservices';
@@ -277,20 +339,28 @@ export class ButtonWebViewServices implements OnInit {
                 table,
             };
             const dapp = await rpc.get_table_rows(callParams);
-            console.log(dapp.rows[0].balance)
+            //console.log(dapp.rows[0].balance)
 
             const hodl = await client.get_dapphdl_accounts(accountName);
 
             const {core_liquid_balance: balance} = data
-            balanceTag!.innerHTML = `Account Liquid Balance: ${balance}`
-            dappBalanceTag!.innerHTML = `Account DAPP Balance: ${dapp}`
-            hodlBalanceTag!.innerHTML = `Account DAPPHODL Balance: ${hodl}`
+            if(balanceTag){
+                balanceTag.innerHTML = `Account Liquid Balance: ${balance}`;
+            }
+            if(dappBalanceTag){
+                dappBalanceTag.innerHTML = `Account DAPP Balance: ${dapp}`;
+            }
+            if(hodlBalanceTag){
+                hodlBalanceTag.innerHTML = `Account DAPPHODL Balance: ${hodl}`;
+            }
 
-            this.always()
+            _self.always();
 
         } catch (e) {
-            console.error(e)
-            balanceTag!.innerHTML = `Unable to retrieve account balance at this time`
+            if(balanceTag){
+                balanceTag.innerHTML = `Unable to retrieve account balance at this time`
+            }
+
         }
     }
 
