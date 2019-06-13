@@ -22,7 +22,7 @@
                             <span class="box__welcome-title">
                                 No more Exuses
                             </span>
-                            <span class="box__welcome-description" (click)="buttonWebViewServices.always()">
+                            <span class="box__welcome-description">
                                 Welcome to MISSION CONTROL
                                 where you now have a say
                                 in the direction AND momentum
@@ -32,9 +32,13 @@
 
                             <div class="box__welcome_full">
                                 <div class="box__welcome__get-all" (click)="!isLoading ? onScatter() : null">
-                                    <i class="icon"><img src=".././../assets/images/arrow-right.svg"/></i>
+                                    <div class="icon">
+                                        <img *ngIf="!isLoading" src=".././../assets/images/arrow-right.svg"/>
+                                        <div *ngIf="isLoading" class="spinner"><div class="spinner-icon"></div></div>
+                                    </div>
                                     <p *ngIf="!isLoading">Browse ALL</p>
                                     <p *ngIf="isLoading">Loading ...</p>
+
                                 </div>
                             </div>
                         </div>
@@ -143,7 +147,7 @@
                                                  *ngIf="item['packages'] && item['packages'].length">
                                                 <div class="accordion-sub__item"
                                                      *ngFor="let pack of item['packages']"
-                                                     [ngClass]="{'active': pack['package_id'] == selectedPackage['service']}"
+                                                     [ngClass]="{'active': pack['package_id'] == selectedPackage['package']}"
                                                      (click)="setCurrentIdPackage(item['service'], pack['package_id'])">
                                                     <p>{{ pack['name'] || pack['package_id'] }}</p>
                                                 </div>
@@ -154,12 +158,10 @@
                                 </div>
                             </div>
                             <div class="box__package-button"
-                                 (click)="selectedPackage['service'] ? onSelect() : null"
+                                 (click)="!isSelectLoading ? onSelect() : null"
                                  [ngClass]="{'no-active': !selectedPackage['service']}">
-
-                                <div class="spinner"><div class="spinner-icon"></div></div>
-
-                                Select
+                                <div *ngIf="isSelectLoading" class="spinner"><div class="spinner-icon"></div></div>
+                                <ng-container *ngIf="!isSelectLoading">Select</ng-container>
                             </div>
 
                             <div class="box__statistic-nav">
@@ -189,13 +191,20 @@
                                  [ngClass]="{'locked': lock, 'unlocked': !lock}">
                                 <div class="lock-head"></div>
                                 <div class="lock-body">
-                                    <div class="lock-body__form">
+                                    <form class="lock-body__form">
                                         <div class="input"></div>
                                         <div class="input"></div>
                                         <div class="input"></div>
-                                        <input type="number" min="0" max="9" placeholder="0" (keyup)="keytab($event)"/>
+                                        <input type="number"
+                                               maxlength="3"
+                                               min="0"
+                                               max="100"
+                                               [(ngModel)]="rateLockInput"
+                                               name="rateLockInput"
+                                               pattern="^$|^([0-9]|[1-9][0-9]|[1][0][0])?"
+                                               (keypress)="keytab($event)"/>
                                         <p>%</p>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                             <div class="lock-info">

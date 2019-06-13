@@ -85,7 +85,9 @@ export class HomeComponent implements OnInit {
     };
 
     isLoading:boolean = false;
+    isSelectLoading:boolean = false;
 
+    rateLockInput:number = 0;
 
     @HostListener('window:resize', ['$event'])
     onResize(event?) {
@@ -116,19 +118,21 @@ export class HomeComponent implements OnInit {
 
         this.authService.isAuth.subscribe(data => {
 
+            console.log(data);
+
             if (data == 'authorized') {
                 this.buttonWebViewServices.getData().then(data => {
                     this.isLoading = false;
 
                     this.data = data;
-                    this.buttonWebViewServices.always();
+                    this.buttonWebViewServices.getAlways().then(data => {
+                        this.setBoxVisible(2);
+                        setTimeout(() => {
+                            this.scrollToCard(1)
+                        }, 100);
+                        this.buttonWebViewServices.updateBalance();
+                    });
 
-                    console.log(data);
-
-                    this.setBoxVisible(2);
-                    setTimeout(() => {
-                        this.scrollToCard(1)
-                    }, 100);
                 });
 
 
@@ -138,7 +142,8 @@ export class HomeComponent implements OnInit {
 
     onScatter() {
         this.isLoading = true;
-        this.scatterService.getData().then(data => {
+
+        this.buttonWebViewServices.getAlways().then(data => {
             this.isLoading = false;
 
             console.log(data);
@@ -150,10 +155,6 @@ export class HomeComponent implements OnInit {
                 this.scrollToCard(1)
             }, 100);
         });
-       /*
-        this.scatterService.get_table_package().then(data => {
-
-        });*/
     }
 
 
@@ -241,17 +242,6 @@ export class HomeComponent implements OnInit {
 
     onStake() {
         this.onNextCard(5);
-        this.buttonWebViewServices.addStakeButtonEventListener();
-
-        //start animation after 800ms or 0ms
-        let timeOut = this.boxes[4].visible ? 0 : 800;
-        setTimeout(() => {
-            this.lock = true;
-        }, timeOut);
-    }
-    onUnStake(){
-        this.onNextCard(5);
-        this.buttonWebViewServices.addUnstakeButtonEventListener();
 
         //start animation after 800ms or 0ms
         let timeOut = this.boxes[4].visible ? 0 : 800;
@@ -259,8 +249,54 @@ export class HomeComponent implements OnInit {
             this.lock = false;
         }, timeOut);
     }
+    onUnStake(){
+        this.onNextCard(5);
+
+        //start animation after 800ms or 0ms
+        let timeOut = this.boxes[4].visible ? 0 : 800;
+        setTimeout(() => {
+            this.lock = true;
+        }, timeOut);
+    }
     onSelect(){
-        this.buttonWebViewServices.addSelectButtonEventListener(this.selectedPackage)
+        let _self = this;
+        this.isSelectLoading = true;
+        this.buttonWebViewServices.addSelectButtonEventListener(this.selectedPackage).then(
+            data => {
+                if(data['status'] == 'executed'){
+                    this.buttonWebViewServices.addStakeButtonEventListener(this.selectedPackage).then(data => {
+                        console.log('Stakeinfo', data);
+
+                        _self.isSelectLoading = false;
+                        _self.onNextCard(5);
+                        let timeOut = _self.boxes[4].visible ? 0 : 800;
+                        setTimeout(() => {
+                            _self.lock = false;
+                        }, timeOut);
+                    },
+                    error => {
+                        console.log(error);
+                        alert('Error! Something went wrong');
+                        _self.isSelectLoading = false;
+                    });
+                }
+
+                /*{
+                    status: "executed"
+                    transaction:
+                        processed: {id: "4e08187f13c62b46c765407b08e6fd6d597b0411a86be9db3a7c0743530b2050", block_num: 63332672, block_time: "2019-06-13T19:36:44.500", producer_block_id: null, receipt: {…}, …}
+                    transaction_id: "4e08187f13c62b46c765407b08e6fd6d597b0411a86be9db3a7c0743530b2050"
+                    __proto__: Object
+                    transactionId: "4e08187f13c62b46c765407b08e6fd6d597b0411a86be9db3a7c0743530b2050"
+                    wasBroadcast: true
+                }*/
+            },
+            error => {
+                console.log(error);
+                this.isSelectLoading = false;
+                alert('Error! Something went wrong');
+            }
+        );
     }
 
     setCurrentIdPackage(serviceId, packageId){
@@ -270,14 +306,40 @@ export class HomeComponent implements OnInit {
     }
 
     keytab(event) {
-        let nextInput = event.srcElement.nextElementSibling; // get the sibling element
-        let target = event.target || event.srcElement;
-        let id = target.id;
-        if (nextInput == null) {
-            return;
-        } else {
-            nextInput.focus();
+        let _self = this;
+        event.preventDefault();
+        //Regex that you can change for whatever you allow in the input (here any word character --> alphanumeric & underscore)
+        let reg = /\w/g;
+        //retreive the key pressed
+        let inputChar = String.fromCharCode(event.which);
+        //retreive the input's value length
+
+        if(this.rateLockInput == null){
+            this.rateLockInput = 0;
         }
+
+        let inputLength = 0;
+        if(_self.rateLockInput){
+            inputLength = _self.rateLockInput.toString().length || 0;
+        }
+
+
+        if ( (inputLength < 4) ) {
+            //if input length < 4, add the value
+            this.rateLockInput = parseFloat(_self.rateLockInput + inputChar);
+            if(this.rateLockInput > 100){
+                this.rateLockInput = 100;
+            }
+
+
+        }else{
+            //else do nothing
+            return;
+        }
+
+
+
+
     }
 
 

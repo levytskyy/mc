@@ -84,9 +84,8 @@ export class ButtonWebViewServices implements OnInit {
         console.info('Account Name:', await loggedInUser.getAccountName())
         console.info('Chain Id:', await loggedInUser.getChainId())
 
-        let _self = this;
-        //balanceUpdateInterval = setInterval(self.updateBalance, 1000);
 
+        //balanceUpdateInterval = setInterval(self.updateBalance, 1000);
 
         this.authService.onAuth('authorized');
     }
@@ -120,6 +119,13 @@ export class ButtonWebViewServices implements OnInit {
         let self = this;
         return new Promise((resolve) => {
             resolve(self.once());
+        })
+    }
+
+    public getAlways() {
+        let self = this;
+        return new Promise((resolve) => {
+            resolve(self.always());
         })
     }
 
@@ -207,7 +213,7 @@ export class ButtonWebViewServices implements OnInit {
 
     async always() {
         const response = await client.get_table_accountext({limit: 99999999999});
-        const userAccountName = await loggedInUser.getAccountName()
+        const userAccountName = await loggedInUser['accountName'];
 
         for (const row of response.rows) {
             const balance = parseFloat(row['balance'].split(' ')[0])
@@ -252,7 +258,7 @@ export class ButtonWebViewServices implements OnInit {
                 }
             }
         }
-        console.log(json);
+        return json;
     }
 
 
@@ -271,16 +277,26 @@ export class ButtonWebViewServices implements OnInit {
         })
     }*/
 
-    async addStakeButtonEventListener() {
-        // Update our demo transaction to use the logged in user
-        const userAccountName = await loggedInUser['accountName'];
-        stakeTransaction.actions[0].authorization[0].actor = userAccountName;
-        stakeTransaction.actions[0].data.from = userAccountName;
+    addStakeButtonEventListener(data) {
+        return new Promise((resolve, reject) => {
+            // Update our demo transaction to use the logged in user
+            const userAccountName = loggedInUser['accountName'];
+            stakeTransaction.actions[0].authorization[0].actor = userAccountName;
+            stakeTransaction.actions[0].data.from = userAccountName;
 
-        loggedInUser.signTransaction(
-            stakeTransaction,
-            { broadcast: true }
-        )
+            selectTransaction.actions[0].data.provider = data['provider'];
+            selectTransaction.actions[0].data.service = data['service'];
+            //selectTransaction.actions[0].data.quantity = data['quantity'];
+
+            loggedInUser.signTransaction(
+                stakeTransaction,
+                { broadcast: true }
+            ).then(function (data) {
+                resolve(data);
+            }, reason => {
+                reject(reason);
+            });
+        })
     }
 
     async addUnstakeButtonEventListener() {
@@ -298,25 +314,25 @@ export class ButtonWebViewServices implements OnInit {
         )
     }
 
-    addSelectButtonEventListener(data) {
-        if(!data) {
-            alert('Something went wrong. Try again');
-            return;
-        }
-        const userAccountName = loggedInUser['accountName'];
-        selectTransaction.actions[0].authorization[0].actor = userAccountName;
-        selectTransaction.actions[0].data.owner = userAccountName;
+    public addSelectButtonEventListener(data) {
+        return new Promise((resolve, reject) => {
+            const userAccountName = loggedInUser['accountName'];
+            selectTransaction.actions[0].authorization[0].actor = userAccountName;
+            selectTransaction.actions[0].data.owner = userAccountName;
 
-        //run select after lock
-        selectTransaction.actions[0].data.provider = data['provider'];
-        selectTransaction.actions[0].data.package = data['package'];
-        selectTransaction.actions[0].data.service = data['service'];
+            //run select after lock
+            selectTransaction.actions[0].data.provider = data['provider'];
+            selectTransaction.actions[0].data.package = data['package'];
+            selectTransaction.actions[0].data.service = data['service'];
 
-        loggedInUser.signTransaction(
-            selectTransaction,
-            { broadcast: true }
-        ).then(function (info) {
-            console.log(info)
+            loggedInUser.signTransaction(
+                selectTransaction,
+                { broadcast: true }
+            ).then(function (info) {
+                resolve(info);
+            }, reason => {
+                reject(reason);
+            });
         })
     }
 
@@ -328,7 +344,7 @@ export class ButtonWebViewServices implements OnInit {
 
         try {
             const rpc = new JsonRpc(`${exampleNet['rpcEndpoints'][0]['protocol']}://${exampleNet['rpcEndpoints'][0]['host']}:${exampleNet['rpcEndpoints'][0]['port']}`)
-            const accountName = await loggedInUser.getAccountName()
+            const accountName = await loggedInUser['accountName'];
             const data = await rpc.get_account(accountName)
             const code = 'dappservices';
             const scope = accountName;
@@ -343,7 +359,13 @@ export class ButtonWebViewServices implements OnInit {
 
             const hodl = await client.get_dapphdl_accounts(accountName);
 
-            const {core_liquid_balance: balance} = data
+            const {core_liquid_balance: balance} = data;
+
+            console.log(`Account Liquid Balance:`, balance);
+            console.log(`Account DAPP Balance:`, dapp);
+            console.log(`Account DAPPHODL Balance:`, hodl);
+
+
             if(balanceTag){
                 balanceTag.innerHTML = `Account Liquid Balance: ${balance}`;
             }
@@ -358,6 +380,7 @@ export class ButtonWebViewServices implements OnInit {
 
         } catch (e) {
             if(balanceTag){
+                console.log(`Unable to retrieve account balance at this time`);
                 balanceTag.innerHTML = `Unable to retrieve account balance at this time`
             }
 

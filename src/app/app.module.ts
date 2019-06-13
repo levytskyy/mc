@@ -24,6 +24,7 @@ import {MatExpansionModule} from '@angular/material/expansion';
 import { WindowRef } from './services/window.services';
 
 import {AuthService} from './services/auth.services';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import {AuthService} from './services/auth.services';
     HttpClientModule,
     NgxChartsModule,
     MatExpansionModule,
+    FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full'},
       { path: 'lazy', loadChildren: './lazy/lazy.module#LazyModule'},
