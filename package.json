@@ -17,7 +17,10 @@
     "compile:server": "tsc -p server.tsconfig.json",
     "generate:prerender": "cd dist && node prerender",
     "serve:prerender": "cd dist/browser && http-server",
-    "serve:ssr": "node dist/server"
+    "serve:ssr": "node dist/server",
+    "fixcharts": "babel node_modules/@swimlane/ngx-charts -d node_modules/@swimlane/ngx-charts --presets es2015",
+    "scatter": "tsc --build tsconfig-scatter.json && webpack --config webpack.config.js",
+    "postinstall": "node patch.js"
   },
   "pre-commit": [],
   "private": true,
@@ -38,13 +41,17 @@
     "@nguniversal/express-engine": "^6.0.0",
     "@nguniversal/module-map-ngfactory-loader": "^6.0.0",
     "@swimlane/ngx-charts": "^11.1.0",
+    "babel-install": "^2.1.0",
+    "babel-preset-es2015": "^6.24.1",
     "core-js": "^2.4.1",
     "d3": "^5.9.2",
     "express": "^4.15.2",
+    "jquery": "^3.4.1",
     "ngx-perfect-scrollbar": "^7.2.1",
     "reflect-metadata": "^0.1.10",
     "rxjs": "6.3.3",
     "sass": "^1.17.2",
+    "stream": "0.0.2",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
@@ -53,13 +60,25 @@
     "@angular/compiler-cli": "7.1.4",
     "@angular/language-service": "7.1.4",
     "@types/node": "^8.0.30",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
     "codelyzer": "^4.0.2",
     "dapp-client": "^0.8.1",
+    "dotenv": "^6.2.0",
     "http-server": "^0.10.0",
     "isomorphic-fetch": "^2.2.1",
+    "js-sha256": "^0.9.0",
     "pre-commit": "^1.2.2",
     "ts-loader": "^4.2.0",
     "tslint": "^5.7.0",
-    "typescript": "3.1.6"
+    "typescript": "3.1.6",
+    "ual-lynx": "^0.1.0",
+    "ual-meetone": "^0.1.1",
+    "ual-plainjs-renderer": "^0.1.1",
+    "ual-scatter": "^0.1.1",
+    "ual-token-pocket": "^0.1.0",
+    "universal-authenticator-library": "^0.1.0"
   }
 }

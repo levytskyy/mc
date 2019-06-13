@@ -21,6 +21,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import {MatExpansionModule} from '@angular/material/expansion';
+import { WindowRef } from './services/window.services';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
-    }
+    },
+    WindowRef
   ],
   bootstrap: [AppComponent]
 })

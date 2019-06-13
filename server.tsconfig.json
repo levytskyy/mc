@@ -2,7 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist",
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": false,
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
@@ -16,5 +16,10 @@
       "dom"
     ]
   },
+  "exclude": [
+    "node_modules/meet-bridge/*",
+    "src/app/scater"
+  ],
   "include": ["server.ts", "prerender.ts"]
+
 }

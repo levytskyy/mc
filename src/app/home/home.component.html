@@ -28,9 +28,9 @@
                                 in the direction AND momentum
                                 your tokens:
                             </span>
-                            <!--<button class="box__welcome-button" (click)="setBoxVisible(2);">
-                                SCATTER
-                            </button>-->
+                            <div class="box__welcome-button" id="ual-div"></div>
+
+
                             <div class="box__welcome_full">
                                 <div class="box__welcome__get-all" (click)="!isLoading ? onScatter() : null">
                                     <i class="icon"><img src=".././../assets/images/arrow-right.svg"/></i>
@@ -98,6 +98,7 @@
                                         (click)="onSelectTypePipe(2)">Staked</button>
                             </div>
                             <ngx-charts-pie-chart
+                                    *ngIf="isBrowser"
                                     class="box__statistic-chart"
                                     [view]="[300, 300]"
                                     [scheme]="{domain: ['#0F59D1', '#C0C0C0']}"
@@ -142,7 +143,7 @@
                                                      *ngFor="let pack of item['packages']"
                                                      [ngClass]="{'active': pack['package_id'] == currentIdPackage}"
                                                      (click)="setCurrentIdPackage(pack['package_id'])">
-                                                    <p>{{ pack.name }}</p>
+                                                    <p>{{ pack['name'] || pack['package_id'] }}</p>
                                                 </div>
                                             </div>
 

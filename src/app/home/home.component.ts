@@ -4,15 +4,15 @@ import {PerfectScrollbarComponent} from 'ngx-perfect-scrollbar';
 import {isPlatformBrowser} from '@angular/common';
 
 
-
 import {ScatterService} from '../services/scatter.services'
+import {ButtonWebViewServices} from '../scater/ButtonWebView.services'
 
 @Component({
     selector: 'app-home',
     templateUrl: 'home.component.html',
     styleUrls: ['home.component.scss'],
     encapsulation: ViewEncapsulation.Emulated,
-    providers: [ScatterService],
+    providers: [ScatterService, ButtonWebViewServices],
     animations: [
         trigger(
             'enterAnimation', [
@@ -90,6 +90,7 @@ export class HomeComponent implements OnInit {
     }
 
     constructor(@Inject(PLATFORM_ID) platformId: string,
+                public buttonWebViewServices: ButtonWebViewServices,
                 public scatterService: ScatterService) {
         this.isBrowser = isPlatformBrowser(platformId);
         if (this.isBrowser) {
@@ -97,6 +98,7 @@ export class HomeComponent implements OnInit {
             if (this.screenWidth < 650) {
                 this.cardWidth = this.screenWidth;
             }
+            this.buttonWebViewServices.init();
         }
     }
 

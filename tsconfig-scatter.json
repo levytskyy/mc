@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "rootDir": "./src/app",
+    "outDir": "./dist",
+    "strict": true,
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowJs": true
+  },
+  "lib": ["esnext"],
+  "include": [
+    "src/app/scater/**/*",
+    "scater/**/*"
+  ],
+  "exclude": [
+    "public",
+    "node_modules"
+  ]
+}
