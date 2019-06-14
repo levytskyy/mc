@@ -144,3 +144,23 @@ body, html{
   0%   { transform: rotate(0deg);   transform: rotate(0deg); }
   100% { transform: rotate(360deg); transform: rotate(360deg); }
 }
+
+@media only screen and (max-width: 480px){
+      #ual-modal-selection-content {
+        width: 100%!important;
+        border: 0;
+        border-radius: 0;
+        height: 100%!important;
+        overflow: hidden!important;
+        padding: 0!important;
+        margin: 0!important;
+        background: rgba(255, 255, 255, 0.92)!important;
+        display: flex!important;
+        flex-direction: column;
+        justify-content: center;
+      }
+  .ual-modal-close {
+    align-self: flex-end;
+    margin: 0 25px 0 0;
+  }
+}
