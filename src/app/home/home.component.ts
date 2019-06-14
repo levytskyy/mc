@@ -173,8 +173,8 @@ export class HomeComponent implements OnInit {
 
     onScatter() {
         this.isLoading = true;
-
-        this.buttonWebViewServices.getAlways().then(data => {
+        //buttonWebViewServices
+        this.scatterService.getData().then(data => {
             this.isLoading = false;
 
             console.log(data);

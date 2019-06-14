@@ -210,11 +210,14 @@ export class ButtonWebViewServices implements OnInit {
 
     async always() {
         const response = await client.get_table_accountext({limit: 99999999999});
-        const userAccountName = await loggedInUser['accountName'];
+        let userAccountName;
+        if(loggedInUser){
+            userAccountName = await loggedInUser['accountName'];
+        }
 
         for (const row of response.rows) {
             const balance = parseFloat(row['balance'].split(' ')[0])
-            const own = userAccountName === row['account']
+            const own = userAccountName === row['account'];
 
             json['staked'] += balance
             json['users'] += 1
@@ -277,6 +280,11 @@ export class ButtonWebViewServices implements OnInit {
     addStakeButtonEventListener(data) {
         return new Promise((resolve, reject) => {
             // Update our demo transaction to use the logged in user
+
+            if(!loggedInUser){
+                reject('Error: You are not authorized');
+            }
+
             const userAccountName = loggedInUser['accountName'];
             stakeTransaction.actions[0].authorization[0].actor = userAccountName;
             stakeTransaction.actions[0].data.from = userAccountName;
@@ -299,6 +307,9 @@ export class ButtonWebViewServices implements OnInit {
     addUnstakeButtonEventListener(data) {
         return new Promise((resolve, reject) => {
             // Update our demo transaction to use the logged in user
+            if(!loggedInUser){
+                reject('Error: You are not authorized');
+            }
             const userAccountName =  loggedInUser['accountName'];
             unstakeTransaction.actions[0].authorization[0].actor = userAccountName;
             unstakeTransaction.actions[0].data.to = userAccountName;
@@ -320,6 +331,9 @@ export class ButtonWebViewServices implements OnInit {
 
     public addSelectButtonEventListener(data) {
         return new Promise((resolve, reject) => {
+            if(!loggedInUser){
+                reject('Error: You are not authorized');
+            }
             const userAccountName = loggedInUser['accountName'];
             selectTransaction.actions[0].authorization[0].actor = userAccountName;
             selectTransaction.actions[0].data.owner = userAccountName;
