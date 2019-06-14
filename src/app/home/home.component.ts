@@ -106,6 +106,8 @@ export class HomeComponent implements OnInit {
 
     typeSign:string = 'stake';
 
+    transactionUrl:any;
+
     @HostListener('window:resize', ['$event'])
     onResize(event?) {
         this.screenWidth = window.innerWidth;
@@ -259,6 +261,12 @@ export class HomeComponent implements OnInit {
     }
 
     onChooseToken() {
+        this.transactionUrl = '';
+        this.selectedPackage = {
+            provider: null,
+            package: null,
+            service: null
+        };
         //hide all card
         for (let i in this.boxes) {
             if (this.boxes.hasOwnProperty(i)) {
@@ -304,6 +312,9 @@ export class HomeComponent implements OnInit {
                         setTimeout(() => {
                             _self.lock = false;
                         }, timeOut);
+
+                        _self.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
+                        console.log('transaction', _self.transactionUrl)
                     },
                     error => {
                         console.log(error);
@@ -311,16 +322,6 @@ export class HomeComponent implements OnInit {
                         _self.isSelectLoading = false;
                     });
                 }
-
-                /*{
-                    status: "executed"
-                    transaction:
-                        processed: {id: "4e08187f13c62b46c765407b08e6fd6d597b0411a86be9db3a7c0743530b2050", block_num: 63332672, block_time: "2019-06-13T19:36:44.500", producer_block_id: null, receipt: {…}, …}
-                    transaction_id: "4e08187f13c62b46c765407b08e6fd6d597b0411a86be9db3a7c0743530b2050"
-                    __proto__: Object
-                    transactionId: "4e08187f13c62b46c765407b08e6fd6d597b0411a86be9db3a7c0743530b2050"
-                    wasBroadcast: true
-                }*/
             },
             error => {
                 console.log(error);
@@ -331,20 +332,20 @@ export class HomeComponent implements OnInit {
     }
 
     onSignTransaction(){
-
         let data = {
             provider: this.selectedPackage['provider'],
             service: this.selectedPackage['service'],
             quantity: this.stakeQut,
         };
 
-        console.log('signData', data);
-
         let _self = this;
         if(this.typeSign == 'stake'){
             _self.lock = true;
             this.buttonWebViewServices.addStakeButtonEventListener(data).then(data => {
                 _self.onNextCard(6);
+
+                this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
+                console.log('transaction', this.transactionUrl);
             },
             error => {
                 console.log(error);
@@ -355,6 +356,9 @@ export class HomeComponent implements OnInit {
             _self.lock = false;
             this.buttonWebViewServices.addUnstakeButtonEventListener(data).then(data => {
                     _self.onNextCard(6);
+
+                    this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
+                    console.log('transaction', this.transactionUrl);
                 },
                 error => {
                     console.log(error);
