@@ -68,12 +68,10 @@
                                     [ngClass]="{'disabled':item.enabled == 0}">
                                     <div class="token__list-item_wrap">
                                         <div class="token__list-item_first">
-                                            <!--<ng-container *ngIf="item.logo">
+                                            <ng-container *ngIf="item.provider">
                                                 <img class="token__list-icon"
-                                                     *ngIf="item.logo != 'N/A'"
-                                                     [src]="item['logo']['logo_svg']"
-                                            </ng-container>-->
-
+                                                     [src]="'../../assets/images/providers/' + item.provider + '.svg'"/>
+                                            </ng-container>
                                             <p>{{ item.provider }}</p>
                                         </div>
                                         <div><p>{{ item.services ? item.services.length : 0 }}</p></div>
@@ -89,9 +87,9 @@
                          *ngIf="boxes[3].visible"
                          [@enterAnimation]>
                         <div class="box__head" *ngIf="currentProvider">
-                            <!--<img class="box__head-icon"
-                                 *ngIf="currentProvider['logo'] != 'N/A'"
-                                 [src]="currentProvider['logo']['logo_svg']">-->
+                            <img class="box__head-icon"
+                                 *ngIf="currentProvider['provider']"
+                                 [src]="'../../assets/images/providers/' + currentProvider['provider'] + '.svg'">
                             <p>{{ currentProvider ? currentProvider['provider'] : '' }} - Stats</p>
                         </div>
                         <div class="box__statistic-body" *ngIf="currentProvider">
@@ -126,9 +124,9 @@
                          *ngIf="boxes[4].visible"
                          [@enterAnimation]>
                         <div class="box__head">
-                            <!--<img class="box__head-icon"
-                                 *ngIf="currentProvider['logo'] != 'N/A'"
-                                 [src]="currentProvider['logo']['logo_svg']">-->
+                            <img class="box__head-icon"
+                                 *ngIf="currentProvider['provider']"
+                                 [src]="'../../assets/images/providers/' + currentProvider['provider'] + '.svg'">
                             <p>{{ currentProvider ? currentProvider['provider'] : '' }} - Choose a Package</p>
                         </div>
                         <div class="box__package-body">
@@ -166,11 +164,12 @@
 
                             <div class="box__statistic-nav">
                                 <div class="box__statistic-button gray"
+                                     *ngIf="selectedPackage['service']"
                                      (click)="onStake();">
                                     <p>Stake</p>
                                 </div>
                                 <div class="box__statistic-button"
-                                     *ngIf="currentProvider['user_staked'] > 0"
+                                     *ngIf="selectedPackage['service'] && currentProvider['user_staked'] > 0"
                                      (click)="onUnStake();">
                                     <p>Unstake</p>
                                 </div>
@@ -184,7 +183,7 @@
                         <div class="box__head">
                             <div class="box__head-icon"></div>
                             <p>Token 1 - LOCK</p>
-                            <div class="box__head-button" (click)="onNextCard(6)">SIGN</div>
+                            <div class="box__head-button" (click)="onSignTransaction()">SIGN</div>
                         </div>
                         <div class="box__lock-body">
                             <div class="lock"
@@ -207,18 +206,22 @@
                                     </form>
                                 </div>
                             </div>
-                            <div class="lock-info">
+                            <div class="lock-info" *ngIf="userBalances">
                                 <div class="lock-info__item">
                                     <p>Available Balance:</p>
-                                    <b>1 000 000</b>
+                                    <b>{{ userBalances['dapp']['availableBalance'] }} {{ userBalances['dapp']['code'] }}</b>
                                 </div>
                                 <div class="lock-info__item">
                                     <p>Stake Quantity:</p>
-                                    <input type="number" value="8000"/>
+                                    <input type="number"
+                                           [(ngModel)]="stakeQut"
+                                           [ngClass]="{'error': userBalances['dapp']['newBalance'] < 0 || stakeQut < 0}"
+                                           (keyup)="setBallances($event, 'dapp')" value="0"
+                                    />
                                 </div>
                                 <div class="lock-info__item">
                                     <p>New Balance:</p>
-                                    <b>900 000</b>
+                                    <b>{{ userBalances['dapp']['newBalance'] }} {{ userBalances['dapp']['code'] }}</b>
                                 </div>
                             </div>
                         </div>

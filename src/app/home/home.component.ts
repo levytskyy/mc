@@ -79,15 +79,32 @@ export class HomeComponent implements OnInit {
 
 
     selectedPackage = {
-        provider: '',
-        package: '',
-        service: ''
+        provider: null,
+        package: null,
+        service: null
+    };
+
+    userBalances = {
+        dapp: {
+            availableBalance: 0,
+            code: 'DAPP',
+            newBalance : 0
+        },
+        hodl: {
+            availableBalance: 0,
+            code: 'HOLD',
+            newBalance : 0
+        }
     };
 
     isLoading:boolean = false;
     isSelectLoading:boolean = false;
 
     rateLockInput:number = 0;
+    stakeQut:number = 0;
+
+
+    typeSign:string = 'stake';
 
     @HostListener('window:resize', ['$event'])
     onResize(event?) {
@@ -117,25 +134,37 @@ export class HomeComponent implements OnInit {
         });*/
 
         this.authService.isAuth.subscribe(data => {
-
-            console.log(data);
-
             if (data == 'authorized') {
                 this.buttonWebViewServices.getData().then(data => {
                     this.isLoading = false;
-
+                    console.log(data);
                     this.data = data;
                     this.buttonWebViewServices.getAlways().then(data => {
                         this.setBoxVisible(2);
                         setTimeout(() => {
                             this.scrollToCard(1)
                         }, 100);
-                        this.buttonWebViewServices.updateBalance();
+
+                        this.buttonWebViewServices.getUserBallance().then(data => {
+                            console.log('balance', data)
+
+                            let dabpBallance = data['dapp']['rows']['length'] ? this.ballanceToInt(data['dapp']['rows'][0]['balance']) : 0;
+                            let holdBallance = data['hodl']['rows']['length'] ? this.ballanceToInt(data['hodl']['rows'][0]['balance']) : 0;
+
+                            if(dabpBallance){
+                                this.userBalances['dapp']['availableBalance'] = dabpBallance;
+                                this.userBalances['dapp']['newBalance'] = dabpBallance;
+                            }
+
+                            if(holdBallance){
+                                this.userBalances['hold']['availableBalance'] = holdBallance;
+                                this.userBalances['hold']['newBalance'] = holdBallance;
+                            }
+                        });
+
                     });
 
                 });
-
-
             }
         });
     }
@@ -241,6 +270,7 @@ export class HomeComponent implements OnInit {
     }
 
     onStake() {
+        this.typeSign = 'stake';
         this.onNextCard(5);
 
         //start animation after 800ms or 0ms
@@ -250,6 +280,7 @@ export class HomeComponent implements OnInit {
         }, timeOut);
     }
     onUnStake(){
+        this.typeSign = 'unstake';
         this.onNextCard(5);
 
         //start animation after 800ms or 0ms
@@ -276,7 +307,7 @@ export class HomeComponent implements OnInit {
                     },
                     error => {
                         console.log(error);
-                        alert('Error! Something went wrong');
+                        alert(error);
                         _self.isSelectLoading = false;
                     });
                 }
@@ -294,9 +325,42 @@ export class HomeComponent implements OnInit {
             error => {
                 console.log(error);
                 this.isSelectLoading = false;
-                alert('Error! Something went wrong');
+                alert(error);
             }
         );
+    }
+
+    onSignTransaction(){
+
+        let data = {
+            provider: this.selectedPackage['provider'],
+            service: this.selectedPackage['service'],
+            quantity: this.stakeQut,
+        };
+
+        console.log('signData', data);
+
+        let _self = this;
+        if(this.typeSign == 'stake'){
+            _self.lock = true;
+            this.buttonWebViewServices.addStakeButtonEventListener(data).then(data => {
+                _self.onNextCard(6);
+            },
+            error => {
+                console.log(error);
+                alert(error);
+            });
+
+        }else if(this.typeSign == 'unstake'){
+            _self.lock = false;
+            this.buttonWebViewServices.addUnstakeButtonEventListener(data).then(data => {
+                    _self.onNextCard(6);
+                },
+                error => {
+                    console.log(error);
+                    alert(error);
+                });
+        }
     }
 
     setCurrentIdPackage(serviceId, packageId){
@@ -331,15 +395,14 @@ export class HomeComponent implements OnInit {
                 this.rateLockInput = 100;
             }
 
+            let procent = this.userBalances['dapp']['availableBalance'] * (this.rateLockInput/100);
+            this.userBalances['dapp']['newBalance'] = this.userBalances['dapp']['availableBalance'] - procent;
+            this.stakeQut = procent;
 
         }else{
             //else do nothing
             return;
         }
-
-
-
-
     }
 
 
@@ -348,6 +411,17 @@ export class HomeComponent implements OnInit {
         return Math.round(parseFloat(number));
     }
 
+
+    ballanceToInt(balance){
+        if(!balance) return 0;
+        let result = balance.replace('DAPP','');
+        return parseFloat(result);
+    }
+
+    setBallances(event, code):void{
+        let value = event.target.value;
+        this.userBalances[code]['newBalance'] = this.userBalances[code]['availableBalance'] - value;
+    }
 
 
 

@@ -816,7 +816,7 @@ $blue-color: #0F59D1;
     border: none;
     font-size: 21px;
     line-height: 21px;
-    width: 85px;
+    width: 150px;
     margin-right: -10px;
     padding: 7px 10px 3px 0;
     text-align: right;
@@ -828,6 +828,7 @@ $blue-color: #0F59D1;
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffc597', endColorstr='#ffdc93',GradientType=1 ); /* IE6-9 */
     color: $blue-color;
     border-radius: 30px;
+    border: 2px solid rgb(255,197,151);
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
       -webkit-appearance: none;
@@ -835,6 +836,10 @@ $blue-color: #0F59D1;
     }
     &[type=number] {
       -moz-appearance:textfield;
+    }
+    &.error{
+      color: red;
+      border: 2px solid red;
     }
   }
 }
