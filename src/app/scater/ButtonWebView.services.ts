@@ -61,7 +61,7 @@ var exampleNet = {
     rpcEndpoints: [{
         protocol: 'https',
         host: 'api.eosn.io',
-        port: Number(443),
+        port: 443,
     }]
 };
 
@@ -216,11 +216,11 @@ export class ButtonWebViewServices implements OnInit {
         }
 
         for (const row of response.rows) {
-            const balance = parseFloat(row['balance'].split(' ')[0])
+            const balance = parseFloat(row['balance'].split(' ')[0]);
             const own = userAccountName === row['account'];
 
-            json['staked'] += balance
-            json['users'] += 1
+            json['staked'] += balance;
+            json['users'] += 1;
 
             for (var p = 0; p < json['providers'].length; p++) {
                 if (json['providers'][p]['provider'] === row['provider']) {
@@ -292,6 +292,9 @@ export class ButtonWebViewServices implements OnInit {
             stakeTransaction.actions[0].data.provider = data['provider'];
             stakeTransaction.actions[0].data.service = data['service'];
             stakeTransaction.actions[0].data.quantity = data['quantity'];
+
+            console.log(loggedInUser);
+            console.log(stakeTransaction);
 
             loggedInUser.signTransaction(
                 stakeTransaction,
@@ -382,6 +385,7 @@ export class ButtonWebViewServices implements OnInit {
             //console.log(dapp.rows[0].balance)
 
             const hodl = await client.get_dapphdl_accounts(accountName);
+
 
             const {core_liquid_balance: balance} = data;
 

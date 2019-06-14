@@ -47,39 +47,52 @@
                          [ngStyle]="{'width': cardWidth + 'px'}"
                          *ngIf="boxes[2].visible"
                          [@enterAnimation]>
-                        <!--<div class="box__tokens-head">
+                        <div class="box__tokens-head">
                             <p class="box__tokens-head_label">Filter by:</p>
-                            <div class="box__tokens-head_button">My tokens</div>
-                            <div class="box__tokens-head_button">Service1</div>
-                            <div class="box__tokens-head_button">Service2</div>
-                            <div class="box__tokens-head_button">Service3</div>
-                        </div>-->
-                        <div class="token__list" *ngIf="data && data['providers']">
+                            <!--<div class="box__tokens-head_button">My tokens</div>-->
+                            <div class="box__tokens-head_button"
+                                 [ngClass]="{'active': item == selectedFilter}"
+                                 (click)="onFilterProviders('all')">
+                                All
+                            </div>
+                            <ng-container *ngFor="let item of servicesFilter">
+                                <div class="box__tokens-head_button"
+                                     [ngClass]="{'active': item == selectedFilter}"
+                                     (click)="onFilterProviders(item)">
+                                    {{ item }}
+                                </div>
+                            </ng-container>
+                        </div>
+                        <div class="token__list"
+                             *ngIf="data && data['providers']">
                             <div class="token__list-head">
                                 <p class="token__list-item_first">providers</p>
                                 <p>services</p>
                                 <p>users</p>
                                 <p>staked</p>
                             </div>
-                            <perfect-scrollbar class="token__list-scroll">
-                                <div class="token__list-item"
-                                     *ngFor="let item of data['providers']"
-                                     (click)="item.enabled != 0 ? onProvider(item) : null"
-                                    [ngClass]="{'disabled':item.enabled == 0}">
-                                    <div class="token__list-item_wrap">
-                                        <div class="token__list-item_first">
-                                            <ng-container *ngIf="item.provider">
-                                                <img class="token__list-icon"
-                                                     [src]="'../../assets/images/providers/' + item.provider + '.svg'"/>
-                                            </ng-container>
-                                            <p>{{ item.provider }}</p>
+                            <div class="token__list-scroll">
+                                <ng-container *ngFor="let item of data['providers']">
+                                    <div class="token__list-item"
+                                         *ngIf="!item['hidden']"
+                                         (click)="item.enabled != 0 ? onProvider(item) : null"
+                                         [ngClass]="{'disabled':item.enabled == 0}">
+                                        <div class="token__list-item_wrap">
+                                            <div class="token__list-item_first">
+                                                <ng-container *ngIf="item.provider">
+                                                    <img class="token__list-icon"
+                                                         [src]="'../../assets/images/providers/' + item.provider + '.svg'"/>
+                                                </ng-container>
+                                                <p>{{ item.provider }}</p>
+                                            </div>
+                                            <div><p>{{ item.services ? item.services.length : 0 }}</p></div>
+                                            <div><p>{{ item.users ? item.users : 0 }}</p></div>
+                                            <div><p>{{ roundNumber(item.staked) }}</p></div>
                                         </div>
-                                        <div><p>{{ item.services ? item.services.length : 0 }}</p></div>
-                                        <div><p>{{ item.users ? item.users : 0 }}</p></div>
-                                        <div><p>{{ roundNumber(item.staked) }}</p></div>
                                     </div>
-                                </div>
-                            </perfect-scrollbar>
+                                </ng-container>
+
+                            </div>
                         </div>
                     </div>
                     <div class="box box__statistic box-3"
@@ -181,8 +194,10 @@
                          *ngIf="boxes[5].visible"
                          [@enterAnimation]>
                         <div class="box__head">
-                            <div class="box__head-icon"></div>
-                            <p>Token 1 - LOCK</p>
+                            <img class="box__head-icon"
+                                 *ngIf="currentProvider['provider']"
+                                 [src]="'../../assets/images/providers/' + currentProvider['provider'] + '.svg'">
+                            <p>{{ currentProvider ? currentProvider['provider'] : '' }} - LOCK</p>
                             <div class="box__head-button" (click)="onSignTransaction()">SIGN</div>
                         </div>
                         <div class="box__lock-body">
@@ -209,22 +224,24 @@
                             <div class="lock-info" *ngIf="userBalances">
                                 <div class="lock-info__item">
                                     <p>Available Balance:</p>
-                                    <b>{{ userBalances['dapp']['availableBalance'] }} {{ userBalances['dapp']['code'] }}</b>
+                                    <b>{{ userBalances[userBalanesType]['availableBalance'] }} {{ userBalances[userBalanesType]['code'] }}</b>
                                 </div>
                                 <div class="lock-info__item">
                                     <p>Stake Quantity:</p>
                                     <input type="number"
                                            [(ngModel)]="stakeQut"
-                                           [ngClass]="{'error': userBalances['dapp']['newBalance'] < 0 || stakeQut < 0}"
-                                           (keyup)="setBallances($event, 'dapp')" value="0"
+                                           [ngClass]="{'error': userBalances[userBalanesType]['newBalance'] < 0 || stakeQut < 0}"
+                                           (keyup)="setBallances($event, userBalanesType)" value="0"
                                     />
                                 </div>
                                 <div class="lock-info__item lock-info__item-footer">
                                     <div class="lock-info__item-wrap">
-                                        <img class="lock-info__item-icon" src="../../assets/images/dapp.svg"/>
+                                        <img class="lock-info__item-icon"
+                                             (click)="onChangeBalanceType()"
+                                             src="../../assets/images/{{ userBalanesType }}.png"/>
                                         <p>New Balance:</p>
                                     </div>
-                                    <b>{{ userBalances['dapp']['newBalance'] }} {{ userBalances['dapp']['code'] }}</b>
+                                    <b>{{ userBalances[userBalanesType]['newBalance'] }} {{ userBalances[userBalanesType]['code'] }}</b>
                                 </div>
                             </div>
                         </div>

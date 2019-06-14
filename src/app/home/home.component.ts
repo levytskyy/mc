@@ -92,10 +92,11 @@ export class HomeComponent implements OnInit {
         },
         hodl: {
             availableBalance: 0,
-            code: 'HOLD',
+            code: 'HODL',
             newBalance : 0
         }
     };
+    userBalanesType:string = 'dapp';
 
     isLoading:boolean = false;
     isSelectLoading:boolean = false;
@@ -107,6 +108,9 @@ export class HomeComponent implements OnInit {
     typeSign:string = 'stake';
 
     transactionUrl:any;
+
+    servicesFilter:any[] = [];
+    selectedFilter:string = 'all';
 
     @HostListener('window:resize', ['$event'])
     onResize(event?) {
@@ -137,10 +141,17 @@ export class HomeComponent implements OnInit {
 
         this.authService.isAuth.subscribe(data => {
             if (data == 'authorized') {
+
+
+
                 this.buttonWebViewServices.getData().then(data => {
                     this.isLoading = false;
-                    console.log(data);
+                    //console.log(data);
                     this.data = data;
+
+                    //console.log(data);
+                    this.servicesFilter = this.getAllServices(data);
+
                     this.buttonWebViewServices.getAlways().then(data => {
                         this.setBoxVisible(2);
                         setTimeout(() => {
@@ -148,7 +159,7 @@ export class HomeComponent implements OnInit {
                         }, 100);
 
                         this.buttonWebViewServices.getUserBallance().then(data => {
-                            console.log('balance', data)
+                            //console.log('balance', data)
 
                             let dabpBallance = data['dapp']['rows']['length'] ? this.ballanceToInt(data['dapp']['rows'][0]['balance']) : 0;
                             let holdBallance = data['hodl']['rows']['length'] ? this.ballanceToInt(data['hodl']['rows'][0]['balance']) : 0;
@@ -177,7 +188,7 @@ export class HomeComponent implements OnInit {
         this.scatterService.getData().then(data => {
             this.isLoading = false;
 
-            console.log(data);
+            //console.log(data);
 
             this.data = data;
 
@@ -192,7 +203,7 @@ export class HomeComponent implements OnInit {
     onProvider(item:number) {
         this.currentProvider = item;
 
-        console.log('currentProvider', this.currentProvider);
+        //console.log('currentProvider', this.currentProvider);
         this.onSelectTypePipe(1);
 
         this.setBoxVisible(3);
@@ -229,7 +240,7 @@ export class HomeComponent implements OnInit {
                 });
         }
 
-        console.log(this.pieData);
+        //console.log(this.pieData);
     }
 
     onNextCard(id) {
@@ -301,13 +312,10 @@ export class HomeComponent implements OnInit {
         let _self = this;
         this.isSelectLoading = true;
 
-
-
         this.buttonWebViewServices.addSelectButtonEventListener(this.selectedPackage).then(
             data => {
                 if(data['status'] == 'executed'){
                     this.buttonWebViewServices.addStakeButtonEventListener(this.selectedPackage).then(data => {
-                        console.log('Stakeinfo', data);
 
                         _self.isSelectLoading = false;
                         _self.onNextCard(5);
@@ -320,14 +328,14 @@ export class HomeComponent implements OnInit {
                         console.log('transaction', _self.transactionUrl)
                     },
                     error => {
-                        console.log(error);
+                        //console.log(error);
                         alert(error);
                         _self.isSelectLoading = false;
                     });
                 }
             },
             error => {
-                console.log(error);
+                //console.log(error);
                 this.isSelectLoading = false;
                 alert(error);
             }
@@ -351,7 +359,7 @@ export class HomeComponent implements OnInit {
                 console.log('transaction', this.transactionUrl);
             },
             error => {
-                console.log(error);
+                //console.log(error);
                 alert(error);
             });
 
@@ -364,7 +372,7 @@ export class HomeComponent implements OnInit {
                     console.log('transaction', this.transactionUrl);
                 },
                 error => {
-                    console.log(error);
+                    //console.log(error);
                     alert(error);
                 });
         }
@@ -402,8 +410,8 @@ export class HomeComponent implements OnInit {
                 this.rateLockInput = 100;
             }
 
-            let procent = this.userBalances['dapp']['availableBalance'] * (this.rateLockInput/100);
-            this.userBalances['dapp']['newBalance'] = this.userBalances['dapp']['availableBalance'] - procent;
+            let procent = this.userBalances[this.userBalanesType]['availableBalance'] * (this.rateLockInput/100);
+            this.userBalances[this.userBalanesType]['newBalance'] = this.userBalances[this.userBalanesType]['availableBalance'] - procent;
             this.stakeQut = procent;
 
         }else{
@@ -430,6 +438,57 @@ export class HomeComponent implements OnInit {
         this.userBalances[code]['newBalance'] = this.userBalances[code]['availableBalance'] - value;
     }
 
+    getAllServices(data){
+        if(!data) return;
+        let results = [];
+        let _self = this;
+
+        for(let provider of data['providers']){
+            for(let service of provider['services']){
+                results.push(service['service']);
+            }
+        }
+        let unique = results.filter( _self.onlyUnique );
+        return unique;
+
+    }
+
+    onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
+    }
+
+    onFilterProviders(filter){
+        let data = this.data;
+        if(!data) return;
+
+        this.selectedFilter = filter;
+
+        if(filter != 'all'){
+            for(let i in this.data['providers']){
+                this.data['providers'][i]['hidden'] = true;
+            }
+
+            for(let i in data['providers']){
+                for(let j of data['providers'][i]['services']){
+                    if(j['service'] == filter){
+                        this.data['providers'][i]['hidden'] = false;
+                    }
+                }
+            }
+        }else{
+            for(let i in this.data['providers']){
+                this.data['providers'][i]['hidden'] = false;
+            }
+        }
+    }
+
+    onChangeBalanceType(){
+        if( this.userBalanesType == 'dapp'){
+            this.userBalanesType = 'hodl';
+        }else {
+            this.userBalanesType = 'dapp';
+        }
+    }
 
 
 }
