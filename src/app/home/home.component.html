@@ -219,8 +219,11 @@
                                            (keyup)="setBallances($event, 'dapp')" value="0"
                                     />
                                 </div>
-                                <div class="lock-info__item">
-                                    <p>New Balance:</p>
+                                <div class="lock-info__item lock-info__item-footer">
+                                    <div class="lock-info__item-wrap">
+                                        <img class="lock-info__item-icon" src="../../assets/images/dapp.svg"/>
+                                        <p>New Balance:</p>
+                                    </div>
                                     <b>{{ userBalances['dapp']['newBalance'] }} {{ userBalances['dapp']['code'] }}</b>
                                 </div>
                             </div>

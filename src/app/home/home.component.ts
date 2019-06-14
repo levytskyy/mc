@@ -300,6 +300,9 @@ export class HomeComponent implements OnInit {
     onSelect(){
         let _self = this;
         this.isSelectLoading = true;
+
+
+
         this.buttonWebViewServices.addSelectButtonEventListener(this.selectedPackage).then(
             data => {
                 if(data['status'] == 'executed'){

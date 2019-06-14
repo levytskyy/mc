@@ -336,9 +336,11 @@ export class ButtonWebViewServices implements OnInit {
             }
             const userAccountName = loggedInUser['accountName'];
             selectTransaction.actions[0].authorization[0].actor = userAccountName;
-            selectTransaction.actions[0].data.owner = userAccountName;
 
-            //run select after lock
+            //console.log(userAccountName);
+            //console.log(data);
+
+            selectTransaction.actions[0].data.owner = userAccountName;
             selectTransaction.actions[0].data.provider = data['provider'];
             selectTransaction.actions[0].data.package = data['package'];
             selectTransaction.actions[0].data.service = data['service'];
