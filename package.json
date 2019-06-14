@@ -51,7 +51,6 @@
     "reflect-metadata": "^0.1.10",
     "rxjs": "6.3.3",
     "sass": "^1.17.2",
-    "scatterjs-core": "^2.7.18",
     "stream": "0.0.2",
     "zone.js": "^0.8.26"
   },
@@ -72,6 +71,7 @@
     "isomorphic-fetch": "^2.2.1",
     "js-sha256": "^0.9.0",
     "pre-commit": "^1.2.2",
+    "scatterjs-core": "^2.7.18",
     "ts-loader": "^4.2.0",
     "tslint": "^5.7.0",
     "typescript": "3.1.6",

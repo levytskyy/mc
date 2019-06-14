@@ -106,7 +106,7 @@ export class ButtonWebViewServices implements OnInit {
                     new Lynx([exampleNet]),
                     //new Ledger([exampleNet]), // BROKEN
                     new TokenPocket([exampleNet]),
-                    new MeetOne([exampleNet])
+                    //new MeetOne([exampleNet])
                 ], {containerElement: $('#ual-div')[0]});
             ul.init();
         });
