@@ -19,6 +19,7 @@
     "serve:prerender": "cd dist/browser && http-server",
     "serve:ssr": "node dist/server",
     "fixcharts": "babel node_modules/@swimlane/ngx-charts -d node_modules/@swimlane/ngx-charts --presets es2015",
+    "fix-scatter": "cd node_modules/ual-scatter && yarn && yarn build",
     "scatter": "tsc --build tsconfig-scatter.json && webpack --config webpack.config.js",
     "postinstall": "node patch.js"
   },
@@ -78,7 +79,7 @@
     "ual-lynx": "^0.1.0",
     "ual-meetone": "^0.1.1",
     "ual-plainjs-renderer": "^0.1.1",
-    "ual-scatter": "^0.1.1",
+    "ual-scatter": "git://github.com/EOSIO/ual-scatter.git#develop",
     "ual-token-pocket": "^0.1.0",
     "universal-authenticator-library": "^0.1.0"
   }

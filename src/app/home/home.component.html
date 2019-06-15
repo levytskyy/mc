@@ -18,15 +18,15 @@
                     <div class="box box__welcome box-1"
                          [ngStyle]="{'width': cardWidth + 'px'}"
                          *ngIf="boxes[1].visible">
+                        <div class="home--loader" *ngIf="isAuthLoading">
+                            <div class="spinner"><div class="spinner-icon"></div></div>
+                        </div>
                         <div class="box__welcome-wrap">
                             <span class="box__welcome-title">
                                 No more Exuses
                             </span>
                             <span class="box__welcome-description">
-                                Welcome to MISSION CONTROL
-                                where you now have a say
-                                in the direction AND momentum
-                                your tokens:
+                               Welcome to MISSION CONTROL where you now have a home for your DAPP Network participation purposes.
                             </span>
                             <div class="box__welcome-button" id="ual-div"></div>
 
@@ -198,7 +198,10 @@
                                  *ngIf="currentProvider['provider']"
                                  [src]="'../../assets/images/providers/' + currentProvider['provider'] + '.svg'">
                             <p>{{ currentProvider ? currentProvider['provider'] : '' }} - LOCK</p>
-                            <div class="box__head-button" (click)="onSignTransaction()">SIGN</div>
+                            <div class="box__head-button" (click)="!isSignLoading ? onSignTransaction() : null">
+                                <div *ngIf="isSignLoading" class="spinner"><div class="spinner-icon"></div></div>
+                                <label *ngIf="!isSignLoading">SIGN</label>
+                            </div>
                         </div>
                         <div class="box__lock-body">
                             <div class="lock"
@@ -231,7 +234,7 @@
                                     <input type="number"
                                            [(ngModel)]="stakeQut"
                                            [ngClass]="{'error': userBalances[userBalanesType]['newBalance'] < 0 || stakeQut < 0}"
-                                           (keyup)="setBallances($event, userBalanesType)" value="0"
+                                           (keyup)="setBallances($event, userBalanesType)" value="1"
                                     />
                                 </div>
                                 <div class="lock-info__item lock-info__item-footer">

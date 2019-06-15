@@ -285,6 +285,8 @@ export class ButtonWebViewServices implements OnInit {
                 reject('Error: You are not authorized');
             }
 
+            console.log(data);
+
             const userAccountName = loggedInUser['accountName'];
             stakeTransaction.actions[0].authorization[0].actor = userAccountName;
             stakeTransaction.actions[0].data.from = userAccountName;
@@ -293,7 +295,7 @@ export class ButtonWebViewServices implements OnInit {
             stakeTransaction.actions[0].data.service = data['service'];
             stakeTransaction.actions[0].data.quantity = data['quantity'];
 
-            console.log(loggedInUser);
+
             console.log(stakeTransaction);
 
             loggedInUser.signTransaction(
@@ -341,12 +343,14 @@ export class ButtonWebViewServices implements OnInit {
             selectTransaction.actions[0].authorization[0].actor = userAccountName;
 
             //console.log(userAccountName);
-            //console.log(data);
+
 
             selectTransaction.actions[0].data.owner = userAccountName;
             selectTransaction.actions[0].data.provider = data['provider'];
             selectTransaction.actions[0].data.package = data['package'];
             selectTransaction.actions[0].data.service = data['service'];
+
+            console.log(selectTransaction);
 
             loggedInUser.signTransaction(
                 selectTransaction,

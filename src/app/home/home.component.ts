@@ -99,10 +99,12 @@ export class HomeComponent implements OnInit {
     userBalanesType:string = 'dapp';
 
     isLoading:boolean = false;
+    isSignLoading:boolean = false;
     isSelectLoading:boolean = false;
+    isAuthLoading:boolean = false;
 
     rateLockInput:number = 0;
-    stakeQut:number = 0;
+    stakeQut:number = 1;
 
 
     typeSign:string = 'stake';
@@ -111,6 +113,7 @@ export class HomeComponent implements OnInit {
 
     servicesFilter:any[] = [];
     selectedFilter:string = 'all';
+
 
     @HostListener('window:resize', ['$event'])
     onResize(event?) {
@@ -140,19 +143,18 @@ export class HomeComponent implements OnInit {
         });*/
 
         this.authService.isAuth.subscribe(data => {
+            this.isAuthLoading = true;
             if (data == 'authorized') {
-
-
-
                 this.buttonWebViewServices.getData().then(data => {
                     this.isLoading = false;
-                    //console.log(data);
+                   console.log(data);
                     this.data = data;
 
                     //console.log(data);
                     this.servicesFilter = this.getAllServices(data);
 
                     this.buttonWebViewServices.getAlways().then(data => {
+                        this.isAuthLoading = false;
                         this.setBoxVisible(2);
                         setTimeout(() => {
                             this.scrollToCard(1)
@@ -315,23 +317,15 @@ export class HomeComponent implements OnInit {
         this.buttonWebViewServices.addSelectButtonEventListener(this.selectedPackage).then(
             data => {
                 if(data['status'] == 'executed'){
-                    this.buttonWebViewServices.addStakeButtonEventListener(this.selectedPackage).then(data => {
+                    _self.isSelectLoading = false;
+                    //_self.onNextCard(5);
+                    let timeOut = _self.boxes[4].visible ? 0 : 800;
+                    setTimeout(() => {
+                        _self.lock = false;
+                    }, timeOut);
 
-                        _self.isSelectLoading = false;
-                        _self.onNextCard(5);
-                        let timeOut = _self.boxes[4].visible ? 0 : 800;
-                        setTimeout(() => {
-                            _self.lock = false;
-                        }, timeOut);
-
-                        _self.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
-                        console.log('transaction', _self.transactionUrl)
-                    },
-                    error => {
-                        //console.log(error);
-                        alert(error);
-                        _self.isSelectLoading = false;
-                    });
+                    _self.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
+                    console.log('transaction', _self.transactionUrl)
                 }
             },
             error => {
@@ -343,10 +337,13 @@ export class HomeComponent implements OnInit {
     }
 
     onSignTransaction(){
+        this.isSignLoading = true;
+        this.boxes[6].visible = false;
+
         let data = {
             provider: this.selectedPackage['provider'],
             service: this.selectedPackage['service'],
-            quantity: this.stakeQut,
+            quantity: this.roundPlus(this.stakeQut) + ' ' + this.userBalances[this.userBalanesType]['code'],
         };
 
         let _self = this;
@@ -354,6 +351,7 @@ export class HomeComponent implements OnInit {
             _self.lock = true;
             this.buttonWebViewServices.addStakeButtonEventListener(data).then(data => {
                 _self.onNextCard(6);
+                this.isSignLoading = false;
 
                 this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
                 console.log('transaction', this.transactionUrl);
@@ -361,12 +359,14 @@ export class HomeComponent implements OnInit {
             error => {
                 //console.log(error);
                 alert(error);
+                this.isSignLoading = false;
             });
 
         }else if(this.typeSign == 'unstake'){
             _self.lock = false;
             this.buttonWebViewServices.addUnstakeButtonEventListener(data).then(data => {
                     _self.onNextCard(6);
+                    this.isSignLoading = false;
 
                     this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
                     console.log('transaction', this.transactionUrl);
@@ -374,6 +374,7 @@ export class HomeComponent implements OnInit {
                 error => {
                     //console.log(error);
                     alert(error);
+                    this.isSignLoading = false;
                 });
         }
     }
@@ -489,6 +490,15 @@ export class HomeComponent implements OnInit {
             this.userBalanesType = 'dapp';
         }
     }
+
+    roundPlus(num) {
+        if(this.f(num) < 4){
+            return num.toFixed(4);
+        }
+        return num;
+
+    }
+    f = x => ( (x.toString().includes('.')) ? (x.toString().split('.').pop().length) : (0) );
 
 
 }
