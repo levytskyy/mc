@@ -22,7 +22,8 @@
     "fix-scatter": "cd node_modules/ual-scatter && yarn && yarn build",
     "add-scatter": "yarn add git://github.com/EOSIO/ual-scatter.git#develop",
     "scatter": "tsc --build tsconfig-scatter.json && webpack --config webpack.config.js",
-    "postinstall": "node patch.js"
+    "postinstall": "node patch.js",
+    "fix": "npm run postinstall && npm run add-scatter && npm run fix-scatter && npm run fixcharts"
   },
   "pre-commit": [],
   "private": true,
@@ -73,7 +74,7 @@
     "isomorphic-fetch": "^2.2.1",
     "js-sha256": "^0.9.0",
     "pre-commit": "^1.2.2",
-    "scatterjs-core": "^2.7.18",
+    "scatterjs-core": "2.7.16",
     "ts-loader": "^4.2.0",
     "tslint": "^5.7.0",
     "typescript": "3.1.6",
