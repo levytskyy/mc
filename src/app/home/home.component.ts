@@ -34,9 +34,7 @@ export class HomeComponent implements OnInit {
     @ViewChild('scroll') scrollEl: PerfectScrollbarComponent;
     isBrowser: boolean;
     screenWidth: number;
-
     lock: boolean = false;
-
     boxes: any = {
         "1": {
             visible: true
@@ -57,7 +55,6 @@ export class HomeComponent implements OnInit {
             visible: false
         }
     };
-
     pieData: any[] = [
         {
             "name": "All Users",
@@ -70,28 +67,24 @@ export class HomeComponent implements OnInit {
             "type": 1,
         },
     ];
-
     cardWidth: number = 650;
-
 
     data: any;
     currentProvider:any;
-
 
     selectedPackage = {
         provider: null,
         package: null,
         service: null
     };
-
     userBalances = {
         dapp: {
-            availableBalance: 0,
+            availableBalance: null,
             code: 'DAPP',
             newBalance : 0
         },
         hodl: {
-            availableBalance: 0,
+            availableBalance: null,
             code: 'HODL',
             newBalance : 0
         }
@@ -106,14 +99,12 @@ export class HomeComponent implements OnInit {
     rateLockInput:number = 0;
     stakeQut:number = 1;
 
-
     typeSign:string = 'stake';
 
     transactionUrl:any;
 
     servicesFilter:any[] = [];
     selectedFilter:string = 'all';
-
 
     @HostListener('window:resize', ['$event'])
     onResize(event?) {
@@ -138,16 +129,11 @@ export class HomeComponent implements OnInit {
     }
 
     ngOnInit() {
-       /* this.scatterService.getData().then(data => {
-            console.log(data);
-        });*/
-
         this.authService.isAuth.subscribe(data => {
             this.isAuthLoading = true;
             if (data == 'authorized') {
                 this.buttonWebViewServices.getData().then(data => {
                     this.isLoading = false;
-                   console.log(data);
                     this.data = data;
 
                     //console.log(data);
@@ -161,7 +147,6 @@ export class HomeComponent implements OnInit {
                         }, 100);
 
                         this.buttonWebViewServices.getUserBallance().then(data => {
-                            //console.log('balance', data)
 
                             let dabpBallance = data['dapp']['rows']['length'] ? this.ballanceToInt(data['dapp']['rows'][0]['balance']) : 0;
                             let holdBallance = data['hodl']['rows']['length'] ? this.ballanceToInt(data['hodl']['rows'][0]['balance']) : 0;
@@ -186,11 +171,8 @@ export class HomeComponent implements OnInit {
 
     onScatter() {
         this.isLoading = true;
-        //buttonWebViewServices
         this.scatterService.getData().then(data => {
             this.isLoading = false;
-
-            //console.log(data);
 
             this.data = data;
 
@@ -209,7 +191,6 @@ export class HomeComponent implements OnInit {
         this.boxes[5]['visible'] = false;
         this.boxes[6]['visible'] = false;
 
-        //console.log('currentProvider', this.currentProvider);
         this.onSelectTypePipe(1);
 
         this.setBoxVisible(3);
@@ -245,8 +226,6 @@ export class HomeComponent implements OnInit {
                     type: 2
                 });
         }
-
-        //console.log(this.pieData);
     }
 
     onNextCard(id) {
@@ -256,8 +235,8 @@ export class HomeComponent implements OnInit {
         }, 100);
     }
 
+    //scroll to center card position
     scrollToCard(number) {
-        //scroll to center car position
         this.scrollEl.directiveRef.scrollToX(number * this.cardWidth, 400)
     }
 
@@ -333,7 +312,6 @@ export class HomeComponent implements OnInit {
                 }
             },
             error => {
-                //console.log(error);
                 this.isSelectLoading = false;
                 alert(error);
             }
@@ -359,10 +337,8 @@ export class HomeComponent implements OnInit {
                         _self.onNextCard(6);
                         this.isSignLoading = false;
                         this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
-                        //console.log('transaction', this.transactionUrl);
                     },
                     error => {
-                        //console.log(error);
                         alert(error);
                         this.isSignLoading = false;
                     });
@@ -372,10 +348,8 @@ export class HomeComponent implements OnInit {
                         _self.onNextCard(6);
                         this.isSignLoading = false;
                         this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
-                        //console.log('transaction', this.transactionUrl);
                     },
                     error => {
-                        //console.log(error);
                         alert(error);
                         this.isSignLoading = false;
                     });
@@ -386,17 +360,16 @@ export class HomeComponent implements OnInit {
         }else if(this.typeSign == 'unstake'){
             _self.lock = false;
             this.buttonWebViewServices.addUnstakeButtonEventListener(data).then(data => {
-                    _self.onNextCard(6);
-                    this.isSignLoading = false;
+                _self.onNextCard(6);
+                this.isSignLoading = false;
 
-                    this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
-                    console.log('transaction', this.transactionUrl);
-                },
-                error => {
-                    //console.log(error);
-                    alert(error);
-                    this.isSignLoading = false;
-                });
+                this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
+                console.log('transaction', this.transactionUrl);
+            },
+            error => {
+                alert(error);
+                this.isSignLoading = false;
+            });
         }
     }
 
@@ -409,35 +382,25 @@ export class HomeComponent implements OnInit {
     keytab(event) {
         let _self = this;
         event.preventDefault();
-        //Regex that you can change for whatever you allow in the input (here any word character --> alphanumeric & underscore)
         let reg = /\w/g;
-        //retreive the key pressed
         let inputChar = String.fromCharCode(event.which);
-        //retreive the input's value length
-
         if(this.rateLockInput == null){
             this.rateLockInput = 0;
         }
-
         let inputLength = 0;
         if(_self.rateLockInput){
             inputLength = _self.rateLockInput.toString().length || 0;
         }
-
-
         if ( (inputLength < 4) ) {
-            //if input length < 4, add the value
             this.rateLockInput = parseFloat(_self.rateLockInput + inputChar);
             if(this.rateLockInput > 100){
                 this.rateLockInput = 100;
             }
-
             let procent = this.userBalances[this.userBalanesType]['availableBalance'] * (this.rateLockInput/100);
             this.userBalances[this.userBalanesType]['newBalance'] = this.userBalances[this.userBalanesType]['availableBalance'] - procent;
             this.stakeQut = procent;
 
         }else{
-            //else do nothing
             return;
         }
     }
@@ -482,9 +445,7 @@ export class HomeComponent implements OnInit {
     onFilterProviders(filter){
         let data = this.data;
         if(!data) return;
-
         this.selectedFilter = filter;
-
         if(filter != 'all'){
             for(let i in this.data['providers']){
                 this.data['providers'][i]['hidden'] = true;
@@ -515,7 +476,5 @@ export class HomeComponent implements OnInit {
     roundPlus(num) {
         return num.toFixed(4);
     }
-    f = x => ( (x.toString().includes('.')) ? (x.toString().split('.').pop().length) : (0) );
-
 
 }

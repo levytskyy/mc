@@ -14,12 +14,14 @@
             <perfect-scrollbar class="content-scroll" #scroll>
                 <div class="panel"
                      #panel
-                    [ngStyle]="{'width': getCountVisibleBox() * cardWidth + (screenWidth > 650 ? screenWidth/2-cardWidth/2 : 0) + 'px'}">
+                     [ngStyle]="{'width': getCountVisibleBox() * cardWidth + (screenWidth > 650 ? screenWidth/2-cardWidth/2 : 0) + 'px'}">
                     <div class="box box__welcome box-1"
                          [ngStyle]="{'width': cardWidth + 'px'}"
                          *ngIf="boxes[1].visible">
                         <div class="home--loader" *ngIf="isAuthLoading">
-                            <div class="spinner"><div class="spinner-icon"></div></div>
+                            <div class="spinner">
+                                <div class="spinner-icon"></div>
+                            </div>
                         </div>
                         <div class="box__welcome-wrap">
                             <span class="box__welcome-title">
@@ -34,11 +36,22 @@
                                 <div class="box__welcome__get-all" (click)="!isLoading ? onScatter() : null">
                                     <div class="icon">
                                         <img *ngIf="!isLoading" src=".././../assets/images/arrow-right.svg"/>
-                                        <div *ngIf="isLoading" class="spinner"><div class="spinner-icon"></div></div>
+                                        <div *ngIf="isLoading" class="spinner">
+                                            <div class="spinner-icon"></div>
+                                        </div>
                                     </div>
                                     <p *ngIf="!isLoading">Browse ALL</p>
                                     <p *ngIf="isLoading">Loading ...</p>
-
+                                </div>
+                                <div class="user-balances">
+                                    <p *ngIf="userBalances['dapp']['availableBalance'] != null">
+                                        {{ userBalances['dapp']['availableBalance'] }}
+                                        <label>DAPP</label>
+                                    </p>
+                                    <p *ngIf="userBalances['hodl']['availableBalance'] != null">
+                                        {{ userBalances['hodl']['availableBalance'] }}
+                                        <label>HODL</label>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -111,10 +124,12 @@
                             <div class="box__statistic-tab">
                                 <button
                                         [ngClass]="{'active': pieData[0]['type'] == 1}"
-                                        (click)="onSelectTypePipe(1)">Users</button>
+                                        (click)="onSelectTypePipe(1)">Users
+                                </button>
                                 <button
                                         [ngClass]="{'active': pieData[0]['type'] == 2}"
-                                        (click)="onSelectTypePipe(2)">Staked</button>
+                                        (click)="onSelectTypePipe(2)">Staked
+                                </button>
                             </div>
                             <ngx-charts-pie-chart
                                     *ngIf="isBrowser"
@@ -150,7 +165,7 @@
                                     <mat-accordion [multi]="false">
                                         <mat-expansion-panel class="accordion-item"
                                                              *ngFor="let item of currentProvider['services']">
-                                            <mat-expansion-panel-header  collapsedHeight="*" expandedHeight="*">
+                                            <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
                                                 <div class="accordion-item__head">
                                                     <p>{{ item.service }}</p>
                                                     <label>({{ item['users'] }} users)</label>
@@ -175,7 +190,9 @@
                             <div class="box__package-button"
                                  (click)="!isSelectLoading ? onSelect() : null"
                                  [ngClass]="{'no-active': !selectedPackage['service']}">
-                                <div *ngIf="isSelectLoading" class="spinner"><div class="spinner-icon"></div></div>
+                                <div *ngIf="isSelectLoading" class="spinner">
+                                    <div class="spinner-icon"></div>
+                                </div>
                                 <ng-container *ngIf="!isSelectLoading">Select</ng-container>
                             </div>
 
@@ -203,7 +220,9 @@
                                  [src]="'../../assets/images/providers/' + currentProvider['provider'] + '.svg'">
                             <p>{{ currentProvider ? currentProvider['provider'] : '' }} - LOCK</p>
                             <div class="box__head-button" (click)="!isSignLoading ? onSignTransaction() : null">
-                                <div *ngIf="isSignLoading" class="spinner"><div class="spinner-icon"></div></div>
+                                <div *ngIf="isSignLoading" class="spinner">
+                                    <div class="spinner-icon"></div>
+                                </div>
                                 <label *ngIf="!isSignLoading">SIGN</label>
                             </div>
                         </div>
@@ -231,7 +250,8 @@
                             <div class="lock-info" *ngIf="userBalances">
                                 <div class="lock-info__item">
                                     <p>Available Balance:</p>
-                                    <b>{{ userBalances[userBalanesType]['availableBalance'] }} {{ userBalances[userBalanesType]['code'] }}</b>
+                                    <b>{{ userBalances[userBalanesType]['availableBalance'] || 0 }} {{
+                                        userBalances[userBalanesType]['code'] }}</b>
                                 </div>
                                 <div class="lock-info__item">
                                     <p>Stake Quantity:</p>
@@ -248,7 +268,8 @@
                                              src="../../assets/images/{{ userBalanesType }}.png"/>
                                         <p>New Balance:</p>
                                     </div>
-                                    <b>{{ userBalances[userBalanesType]['newBalance'] }} {{ userBalances[userBalanesType]['code'] }}</b>
+                                    <b>{{ userBalances[userBalanesType]['newBalance'] || 0 }} {{
+                                        userBalances[userBalanesType]['code'] }}</b>
                                 </div>
                             </div>
                         </div>

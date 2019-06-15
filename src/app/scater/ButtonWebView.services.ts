@@ -309,6 +309,9 @@ export class ButtonWebViewServices implements OnInit {
             stakeTransaction.actions[0].data.service = data['service'];
             stakeTransaction.actions[0].data.quantity = data['quantity'];
 
+
+            console.log(stakeTransaction);
+
             loggedInUser.signTransaction(
                 stakeTransaction,
                 {broadcast: true}
