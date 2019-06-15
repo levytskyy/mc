@@ -56,7 +56,7 @@ import { FormsModule } from '@angular/forms';
     },
     WindowRef,
     AuthService,
-    NgxChartsModule
+    //NgxChartsModule
   ],
   bootstrap: [AppComponent]
 })
