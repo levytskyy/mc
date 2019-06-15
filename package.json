@@ -19,7 +19,7 @@
     "serve:prerender": "cd dist/browser && http-server",
     "serve:ssr": "node dist/server",
     "fixcharts": "babel node_modules/@swimlane/ngx-charts -d node_modules/@swimlane/ngx-charts --presets es2015",
-    "fix-scatter": "cd node_modules/ual-scatter && npm run build",
+    "fix-scatter": "cd node_modules/ual-scatter && yarn && yarn build",
     "scatter": "tsc --build tsconfig-scatter.json && webpack --config webpack.config.js",
     "postinstall": "node patch.js"
   },
