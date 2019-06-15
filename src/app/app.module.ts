@@ -18,7 +18,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   useBothWheelAxes: true
   //wheelPropagation: true
 };
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+//import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import {MatExpansionModule} from '@angular/material/expansion';
 import { WindowRef } from './services/window.services';
@@ -38,7 +38,7 @@ import { FormsModule } from '@angular/forms';
     HttpClientModule,
     MatExpansionModule,
     FormsModule,
-    NgxChartsModule,
+    //NgxChartsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full'},
       { path: 'lazy', loadChildren: './lazy/lazy.module#LazyModule'},
@@ -56,7 +56,7 @@ import { FormsModule } from '@angular/forms';
     },
     WindowRef,
     AuthService,
-    NgxChartsModule
+    //NgxChartsModule
   ],
   bootstrap: [AppComponent]
 })
