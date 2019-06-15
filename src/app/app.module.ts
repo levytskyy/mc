@@ -18,7 +18,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   useBothWheelAxes: true
   //wheelPropagation: true
 };
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+//import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import {MatExpansionModule} from '@angular/material/expansion';
 import { WindowRef } from './services/window.services';
@@ -36,7 +36,7 @@ import { FormsModule } from '@angular/forms';
     PerfectScrollbarModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    NgxChartsModule,
+    //NgxChartsModule,
     MatExpansionModule,
     FormsModule,
     RouterModule.forRoot([
