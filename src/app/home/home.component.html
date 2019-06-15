@@ -80,8 +80,10 @@
                                         <div class="token__list-item_wrap">
                                             <div class="token__list-item_first">
                                                 <ng-container *ngIf="item.provider">
-                                                    <img class="token__list-icon"
-                                                         [src]="'../../assets/images/providers/' + item.provider + '.svg'"/>
+                                                    <a href="http://{{ item.website }}" target="_blank">
+                                                        <img class="token__list-icon"
+                                                             [src]="'../../assets/images/providers/' + item.provider + '.svg'"/>
+                                                    </a>
                                                 </ng-container>
                                                 <p>{{ item.provider }}</p>
                                             </div>
@@ -118,7 +120,7 @@
                                     *ngIf="isBrowser"
                                     class="box__statistic-chart"
                                     [view]="[300, 300]"
-                                    [scheme]="{domain: ['#0F59D1', '#C0C0C0']}"
+                                    [scheme]="{domain: ['#23235c', '#C0C0C0']}"
                                     [results]="pieData"
                                     [legendTitle]=null
                                     [legend]="true">
@@ -151,6 +153,7 @@
                                             <mat-expansion-panel-header  collapsedHeight="*" expandedHeight="*">
                                                 <div class="accordion-item__head">
                                                     <p>{{ item.service }}</p>
+                                                    <label>({{ item['users'] }} users)</label>
                                                 </div>
                                             </mat-expansion-panel-header>
 
@@ -161,6 +164,7 @@
                                                      [ngClass]="{'active': pack['package_id'] == selectedPackage['package']}"
                                                      (click)="setCurrentIdPackage(item['service'], pack['package_id'])">
                                                     <p>{{ pack['name'] || pack['package_id'] }}</p>
+                                                    <label>({{ pack['users'] }} users)</label>
                                                 </div>
                                             </div>
 

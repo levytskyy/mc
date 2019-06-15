@@ -1,4 +1,4 @@
-$blue-color: #0F59D1;
+$blue-color: rgb(35, 35, 92);
 
 
 .container{
@@ -351,6 +351,13 @@ $blue-color: #0F59D1;
 
 .accordion-item{
   .accordion-item__head{
+    display: flex;
+    align-items: center;
+    label{
+      font-size: 14px;
+      margin: 0 0 0 15px;
+      color: #9c9c9c;
+    }
     p{
       font-family: 'orbitron_mediumregular';
       font-size: 16px;
@@ -368,9 +375,16 @@ $blue-color: #0F59D1;
   padding: 10px 0 10px 50px;
   cursor: pointer;
   border-top: 1px solid silver;
+  display: flex;
+  align-items: center;
   p{
     font-family: 'orbitron_mediumregular';
     font-size: 14px;
+  }
+  label{
+    font-size: 14px;
+    margin: 0 0 0 15px;
+    color: #9c9c9c;
   }
   &:hover{
     background: rgb(255,197,151); /* Old browsers */
@@ -438,6 +452,11 @@ $blue-color: #0F59D1;
   font-size: 16px;
   color: #000000;
   align-items: center;
+  transition:.2s;
+  &:hover{
+    background: #EBEBEB;
+    transform: scale(1.2);
+  }
 }
 .box__tokens-head{
   font-family: 'avenirregular';
@@ -578,7 +597,7 @@ $blue-color: #0F59D1;
 
 .box__success{
   /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#0f59d1+0,2b6dff+40,ff7089+100 */
-  background: rgb(15,89,209); /* Old browsers */
+  background: rgb(35, 35, 92); /* Old browsers */
   background: -moz-linear-gradient(-45deg,  rgba(15,89,209,1) 0%, rgba(43,109,255,1) 40%, rgba(255,112,137,1) 100%); /* FF3.6-15 */
   background: -webkit-linear-gradient(-45deg,  rgba(15,89,209,1) 0%,rgba(43,109,255,1) 40%,rgba(255,112,137,1) 100%); /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(135deg,  rgba(15,89,209,1) 0%,rgba(43,109,255,1) 40%,rgba(255,112,137,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
@@ -946,7 +965,7 @@ $blue-color: #0F59D1;
 .box__contact-button{
   font-family: 'avenirregular';
   padding: 10px 35px;
-  background: #0F59D1;
+  background: rgb(35, 35, 92);
   border-radius: 610px;
   cursor: pointer;
   color: #FFFFFF;

@@ -23,11 +23,9 @@ import stakeTransaction from './stake-transaction';
 import unstakeTransaction from './unstake-transaction';
 import selectTransaction from './select-transaction'
 
-/*
-
 
 import hodlStakeTransaction from './hodl-stake-transaction'
-import hodlUnstakeTransaction from './hodl-unstake-transaction'*/
+import hodlUnstakeTransaction from './hodl-unstake-transaction'
 
 //DATA FETCHING STUFF
 import {DappClient} from "dapp-client";
@@ -73,26 +71,17 @@ export class ButtonWebViewServices implements OnInit {
     isBrowser: boolean;
 
     constructor(public http: HttpClient,
-                public authService:AuthService,
+                public authService: AuthService,
                 @Inject(PLATFORM_ID) platformId: string) {
         this.isBrowser = isPlatformBrowser(platformId);
     }
 
     userCallback = async(users: User[]) => {
-        loggedInUser = users[0]
-        console.info('User Information:')
-        console.info('Account Name:', await loggedInUser.getAccountName())
-        console.info('Chain Id:', await loggedInUser.getChainId())
-
-        //balanceUpdateInterval = setInterval(self.updateBalance, 1000);
-
+        loggedInUser = users[0];
         this.authService.onAuth('authorized');
     }
 
-
-    ngOnInit() {
-
-    }
+    ngOnInit() {}
 
     init() {
         let _self = this;
@@ -134,7 +123,7 @@ export class ButtonWebViewServices implements OnInit {
             if (row['api_endpoint'] == 'null')
                 continue
 
-            var pkg = {
+            let pkg = {
                 'package_id': row['package_id'],
                 'quota': row['quota'],
                 'package_period': row['package_period'],
@@ -146,14 +135,14 @@ export class ButtonWebViewServices implements OnInit {
                 'user_expire': 0, //if this is not 0...
                 'quota_left': 0 //...then 0 here means no more quota left, all starting quota used
             }
-            var service = {
+            let service = {
                 'service': row['service'],
                 'packages': [pkg],
                 'staked': 0,
                 'users': 0,
                 'user_staked': 0,
             }
-            var provider = {
+            let provider = {
                 'provider': row['provider'],
                 'enabled': row['enabled'],
                 'users': 0,
@@ -162,25 +151,25 @@ export class ButtonWebViewServices implements OnInit {
                 'website': '',
                 'services': [service],
             }
-            var uri = row['package_json_uri']
-            var slash = uri.lastIndexOf('/')
+            let uri = row['package_json_uri']
+            let slash = uri.lastIndexOf('/')
             if (slash !== -1)
                 provider['website'] = uri.slice(8, slash)
 
-            var found = false;
+            let found = false;
 
-            for (var p = 0; p < json['providers'].length; p++) {
+            for (let p = 0; p < json['providers'].length; p++) {
                 if (json['providers'][p]['provider'] === row['provider']) {
                     if (slash !== -1 && json['providers'][p]['website'] === '')
                         json['providers'][p]['website'] = uri.slice(8, slash)
 
 
                     found = false;
-                    for (var s = 0; s < json['providers'][p]['services'].length; s++) {
+                    for (let s = 0; s < json['providers'][p]['services'].length; s++) {
                         if (json['providers'][p]['services'][s]['service'] === row['service']) {
 
                             found = false
-                            for (var k = 0; k < json['providers'][p]['services'][s]['packages'].length; k++) {
+                            for (let k = 0; k < json['providers'][p]['services'][s]['packages'].length; k++) {
                                 if (json['providers'][p]['services'][s]['packages'][k]['package_id'] === row['package_id']) {
                                     found = true //PACKAGE FOUND
                                     break //LEAVE THE PACKAGES LOOP
@@ -211,7 +200,7 @@ export class ButtonWebViewServices implements OnInit {
     async always() {
         const response = await client.get_table_accountext({limit: 99999999999});
         let userAccountName;
-        if(loggedInUser){
+        if (loggedInUser) {
             userAccountName = await loggedInUser['accountName'];
         }
 
@@ -261,31 +250,56 @@ export class ButtonWebViewServices implements OnInit {
         return json;
     }
 
+    addHodlStakeButtonEventListener(data) {
+        return new Promise((resolve, reject) => {
+            // Update our demo transaction to use the logged in user
+            const userAccountName = loggedInUser.getAccountName()
+            hodlStakeTransaction.actions[0].authorization[0].actor = userAccountName;
+            hodlStakeTransaction.actions[0].data.owner = userAccountName;
 
-    /*async addTransferButtonEventListener() {
-        // Update our demo transaction to use the logged in user
-        const userAccountName = await loggedInUser.getAccountName()
-        demoTransaction.actions[0].authorization[0].actor = userAccountName
-        demoTransaction.actions[0].data.from = userAccountName
+            stakeTransaction.actions[0].data.provider = data['provider'];
+            stakeTransaction.actions[0].data.service = data['service'];
+            stakeTransaction.actions[0].data.quantity = data['quantity'];
 
-        loggedInUser.signTransaction(
-            demoTransaction,
-            {broadcast: true}
-        ).then(function (info) {
-            const transaction = 'https://bloks.io/transaction/' + info.transaction['transaction_id']
-            console.log(transaction)
+            loggedInUser.signTransaction(
+                hodlStakeTransaction,
+                {broadcast: true}
+            ).then(function (data) {
+                resolve(data);
+            }, reason => {
+                reject(reason);
+            });
         })
-    }*/
+    }
+
+
+    addHodlUnstakeButtonEventListener(data) {
+        return new Promise((resolve, reject) => {
+            const userAccountName = loggedInUser['accountName'];
+            hodlUnstakeTransaction.actions[0].authorization[0].actor = userAccountName;
+            hodlUnstakeTransaction.actions[0].data.owner = userAccountName;
+
+            stakeTransaction.actions[0].data.provider = data['provider'];
+            stakeTransaction.actions[0].data.service = data['service'];
+            stakeTransaction.actions[0].data.quantity = data['quantity'];
+
+            loggedInUser.signTransaction(
+                hodlUnstakeTransaction,
+                {broadcast: true}
+            ).then(function (data) {
+                resolve(data);
+            }, reason => {
+                reject(reason);
+            });
+        })
+    }
+
 
     addStakeButtonEventListener(data) {
         return new Promise((resolve, reject) => {
-            // Update our demo transaction to use the logged in user
-
-            if(!loggedInUser){
+            if (!loggedInUser) {
                 reject('Error: You are not authorized');
             }
-
-            console.log(data);
 
             const userAccountName = loggedInUser['accountName'];
             stakeTransaction.actions[0].authorization[0].actor = userAccountName;
@@ -295,12 +309,9 @@ export class ButtonWebViewServices implements OnInit {
             stakeTransaction.actions[0].data.service = data['service'];
             stakeTransaction.actions[0].data.quantity = data['quantity'];
 
-
-            console.log(stakeTransaction);
-
             loggedInUser.signTransaction(
                 stakeTransaction,
-                { broadcast: true }
+                {broadcast: true}
             ).then(function (data) {
                 resolve(data);
             }, reason => {
@@ -312,10 +323,10 @@ export class ButtonWebViewServices implements OnInit {
     addUnstakeButtonEventListener(data) {
         return new Promise((resolve, reject) => {
             // Update our demo transaction to use the logged in user
-            if(!loggedInUser){
+            if (!loggedInUser) {
                 reject('Error: You are not authorized');
             }
-            const userAccountName =  loggedInUser['accountName'];
+            const userAccountName = loggedInUser['accountName'];
             unstakeTransaction.actions[0].authorization[0].actor = userAccountName;
             unstakeTransaction.actions[0].data.to = userAccountName;
 
@@ -325,7 +336,7 @@ export class ButtonWebViewServices implements OnInit {
 
             loggedInUser.signTransaction(
                 unstakeTransaction,
-                { broadcast: true }
+                {broadcast: true}
             ).then(function (data) {
                 resolve(data);
             }, reason => {
@@ -336,14 +347,11 @@ export class ButtonWebViewServices implements OnInit {
 
     public addSelectButtonEventListener(data) {
         return new Promise((resolve, reject) => {
-            if(!loggedInUser){
+            if (!loggedInUser) {
                 reject('Error: You are not authorized');
             }
             const userAccountName = loggedInUser['accountName'];
             selectTransaction.actions[0].authorization[0].actor = userAccountName;
-
-            //console.log(userAccountName);
-
 
             selectTransaction.actions[0].data.owner = userAccountName;
             selectTransaction.actions[0].data.provider = data['provider'];
@@ -354,7 +362,7 @@ export class ButtonWebViewServices implements OnInit {
 
             loggedInUser.signTransaction(
                 selectTransaction,
-                { broadcast: true }
+                {broadcast: true}
             ).then(function (info) {
                 resolve(info);
             }, reason => {
@@ -363,7 +371,7 @@ export class ButtonWebViewServices implements OnInit {
         })
     }
 
-    getUserBallance(){
+    getUserBallance() {
         let _self = this;
         return new Promise((resolve) => {
             resolve(_self.updateBalance());
@@ -385,24 +393,22 @@ export class ButtonWebViewServices implements OnInit {
                 scope,
                 table,
             };
+
+            //var response = await rpc.get_table_rows(callParams);
+            //const total_staked = response.rows[0].total_staked;
+
             const dapp = await rpc.get_table_rows(callParams);
-            //console.log(dapp.rows[0].balance)
 
             const hodl = await client.get_dapphdl_accounts(accountName);
 
-
             const {core_liquid_balance: balance} = data;
 
-            //console.log(`Account Liquid Balance:`, balance);
-            //console.log(`Account DAPP Balance:`, dapp);
-            //console.log(`Account DAPPHODL Balance:`, hodl);
-
-           let results = {
-               balance: balance,
-               dapp: dapp,
-               hodl: hodl,
-               core_liquid_balance: data
-           };
+            let results = {
+                balance: balance,
+                dapp: dapp,
+                hodl: hodl,
+                core_liquid_balance: data
+            };
 
             _self.always();
             return results;

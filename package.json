@@ -20,6 +20,7 @@
     "serve:ssr": "node dist/server",
     "fixcharts": "babel node_modules/@swimlane/ngx-charts -d node_modules/@swimlane/ngx-charts --presets es2015",
     "fix-scatter": "cd node_modules/ual-scatter && yarn && yarn build",
+    "add-scatter": "yarn add git://github.com/EOSIO/ual-scatter.git#develop",
     "scatter": "tsc --build tsconfig-scatter.json && webpack --config webpack.config.js",
     "postinstall": "node patch.js"
   },

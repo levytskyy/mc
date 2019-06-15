@@ -205,6 +205,10 @@ export class HomeComponent implements OnInit {
     onProvider(item:number) {
         this.currentProvider = item;
 
+        this.boxes[4]['visible'] = false;
+        this.boxes[5]['visible'] = false;
+        this.boxes[6]['visible'] = false;
+
         //console.log('currentProvider', this.currentProvider);
         this.onSelectTypePipe(1);
 
@@ -348,19 +352,36 @@ export class HomeComponent implements OnInit {
 
         let _self = this;
         if(this.typeSign == 'stake'){
-            _self.lock = true;
-            this.buttonWebViewServices.addStakeButtonEventListener(data).then(data => {
-                _self.onNextCard(6);
-                this.isSignLoading = false;
 
-                this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
-                console.log('transaction', this.transactionUrl);
-            },
-            error => {
-                //console.log(error);
-                alert(error);
-                this.isSignLoading = false;
-            });
+            if(this.userBalanesType == 'dapp'){
+                _self.lock = true;
+                this.buttonWebViewServices.addStakeButtonEventListener(data).then(data => {
+                        _self.onNextCard(6);
+                        this.isSignLoading = false;
+                        this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
+                        //console.log('transaction', this.transactionUrl);
+                    },
+                    error => {
+                        //console.log(error);
+                        alert(error);
+                        this.isSignLoading = false;
+                    });
+            }else if(this.userBalanesType == 'hodl'){
+                _self.lock = true;
+                this.buttonWebViewServices.addHodlStakeButtonEventListener(data).then(data => {
+                        _self.onNextCard(6);
+                        this.isSignLoading = false;
+                        this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
+                        //console.log('transaction', this.transactionUrl);
+                    },
+                    error => {
+                        //console.log(error);
+                        alert(error);
+                        this.isSignLoading = false;
+                    });
+            }
+
+
 
         }else if(this.typeSign == 'unstake'){
             _self.lock = false;
@@ -492,11 +513,7 @@ export class HomeComponent implements OnInit {
     }
 
     roundPlus(num) {
-        if(this.f(num) < 4){
-            return num.toFixed(4);
-        }
-        return num;
-
+        return num.toFixed(4);
     }
     f = x => ( (x.toString().includes('.')) ? (x.toString().split('.').pop().length) : (0) );
 
