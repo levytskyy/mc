@@ -353,8 +353,14 @@ $blue-color: rgb(35, 35, 92);
   padding: 20px;
 }
 
+.box__package{
+  .token__list {
+    width: 90%;
+  }
+}
+
 .token__list {
-  width: 90%;
+  width: 100%;
   flex-direction: column;
   border: 1px solid #C0C0C0;
   border-radius: 4px;
@@ -1111,6 +1117,11 @@ $blue-color: rgb(35, 35, 92);
   .box__head {
     p {
       font-size: 21px;
+    }
+  }
+  .box__package{
+    .token__list {
+      width: 100%;
     }
   }
 }
