@@ -6,6 +6,11 @@
     </div>
 
     <div class="header">
+        <div class="header__logo">
+            <a href="https://liquidapps.io/" target="_blank">
+                <img src=".././../assets/images/mainlogo.svg" alt="liquidapps">
+            </a>
+        </div>
         <h1 class="header__title">Mission control</h1>
     </div>
 
@@ -115,9 +120,11 @@
                          *ngIf="boxes[3].visible"
                          [@enterAnimation]>
                         <div class="box__head" *ngIf="currentProvider">
-                            <img class="box__head-icon"
-                                 *ngIf="currentProvider['provider']"
-                                 [src]="'../../assets/images/providers/' + currentProvider['provider'] + '.svg'">
+                            <a href="http://{{ currentProvider['website'] }}" target="_blank">
+                                <img class="box__head-icon"
+                                     *ngIf="currentProvider['provider']"
+                                     [src]="'../../assets/images/providers/' + currentProvider['provider'] + '.svg'">
+                                </a>
                             <p>{{ currentProvider ? currentProvider['provider'] : '' }} - Stats</p>
                         </div>
                         <div class="box__statistic-body" *ngIf="currentProvider">
@@ -154,9 +161,11 @@
                          *ngIf="boxes[4].visible"
                          [@enterAnimation]>
                         <div class="box__head">
-                            <img class="box__head-icon"
-                                 *ngIf="currentProvider['provider']"
-                                 [src]="'../../assets/images/providers/' + currentProvider['provider'] + '.svg'">
+                            <a href="http://{{ currentProvider['website'] }}" target="_blank">
+                                <img class="box__head-icon"
+                                     *ngIf="currentProvider['provider']"
+                                     [src]="'../../assets/images/providers/' + currentProvider['provider'] + '.svg'">
+                            </a>
                             <p>{{ currentProvider ? currentProvider['provider'] : '' }} - Choose a Package</p>
                         </div>
                         <div class="box__package-body">
@@ -178,7 +187,12 @@
                                                      *ngFor="let pack of item['packages']"
                                                      [ngClass]="{'active': pack['package_id'] == selectedPackage['package']}"
                                                      (click)="setCurrentIdPackage(item['service'], pack['package_id'])">
-                                                    <p>{{ pack['name'] || pack['package_id'] }}</p>
+                                                    <p mat-raised-button
+                                                       matTooltipClass="tooltip"
+                                                       matTooltipPosition="right"
+                                                       matTooltip="{{ getPackageInfo(pack) }}">
+                                                        {{ pack['name'] || pack['package_id'] }}
+                                                    </p>
                                                     <label>({{ pack['users'] }} users)</label>
                                                 </div>
                                             </div>
@@ -215,9 +229,11 @@
                          *ngIf="boxes[5].visible"
                          [@enterAnimation]>
                         <div class="box__head">
-                            <img class="box__head-icon"
-                                 *ngIf="currentProvider['provider']"
-                                 [src]="'../../assets/images/providers/' + currentProvider['provider'] + '.svg'">
+                            <a href="http://{{ currentProvider['website'] }}" target="_blank">
+                                <img class="box__head-icon"
+                                     *ngIf="currentProvider['provider']"
+                                     [src]="'../../assets/images/providers/' + currentProvider['provider'] + '.svg'">
+                            </a>
                             <p>{{ currentProvider ? currentProvider['provider'] : '' }} - LOCK</p>
                             <div class="box__head-button" (click)="!isSignLoading ? onSignTransaction() : null">
                                 <div *ngIf="isSignLoading" class="spinner">
@@ -282,13 +298,21 @@
                             <p>Transaction success</p>
                         </div>
                         <div class="box__success-wrap">
+                            <a *ngIf="transactionSelectUrl"
+                               href="{{ transactionSelectUrl }}"
+                               target="_blank"
+                               class="box__success-link">
+                                {{ transactionSelectUrl }}
+                            </a>
+
                             <a *ngIf="transactionUrl"
                                href="{{ transactionUrl }}"
                                target="_blank"
                                class="box__success-link">
                                 {{ transactionUrl }}
                             </a>
-                            <div class="box__success-button" (click)="onChooseToken()">Choose different token</div>
+
+                            <div class="box__success-button" (click)="onChooseToken()">Choose a different provider</div>
                             <!--<a href="https://telegram.me/levytskyy"
                                target="_blank"
                                class="box__success-button light" >Telegram Channel</a>-->

@@ -8,6 +8,7 @@ import {HomeComponent} from './home/home.component';
 import {TransferHttpCacheModule} from '@nguniversal/common';
 import {HttpClientModule} from '@angular/common/http';
 
+
 //scroll
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
@@ -21,6 +22,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 import {MatExpansionModule} from '@angular/material/expansion';
+import {MatTooltipModule} from '@angular/material/tooltip';
 import { WindowRef } from './services/window.services';
 
 import {AuthService} from './services/auth.services';
@@ -37,6 +39,7 @@ import { FormsModule } from '@angular/forms';
     BrowserAnimationsModule,
     HttpClientModule,
     MatExpansionModule,
+    MatTooltipModule,
     FormsModule,
     NgxChartsModule,
     RouterModule.forRoot([
@@ -47,7 +50,8 @@ import { FormsModule } from '@angular/forms';
     TransferHttpCacheModule,
   ],
   exports:[
-    MatExpansionModule
+    MatExpansionModule,
+    MatTooltipModule
   ],
   providers: [
     {

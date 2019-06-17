@@ -102,6 +102,7 @@ export class HomeComponent implements OnInit {
     typeSign:string = 'stake';
 
     transactionUrl:any;
+    transactionSelectUrl:any;
 
     servicesFilter:any[] = [];
     selectedFilter:string = 'all';
@@ -136,7 +137,7 @@ export class HomeComponent implements OnInit {
                     this.isLoading = false;
                     this.data = data;
 
-                    //console.log(data);
+                    console.log(data);
                     this.servicesFilter = this.getAllServices(data);
 
                     this.buttonWebViewServices.getAlways().then(data => {
@@ -307,8 +308,8 @@ export class HomeComponent implements OnInit {
                         _self.lock = false;
                     }, timeOut);
 
-                    _self.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
-                    console.log('transaction', _self.transactionUrl)
+                    _self.transactionSelectUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
+                    console.log('transaction', _self.transactionSelectUrl)
                 }
             },
             error => {
@@ -475,6 +476,17 @@ export class HomeComponent implements OnInit {
 
     roundPlus(num) {
         return num.toFixed(4);
+    }
+
+    getPackageInfo(data): any {
+        return 'Staked: '+ data['staked'] +'' +
+            '\n Min stake quantity: '+ data['min_stake_quantity'] +'' +
+            '\n Users: '+ data['users'] +'' +
+            '\n Users staked: '+ data['user_staked'] +'' +
+            '\n Users expire: '+ data['user_expire'] +'' +
+            '\n Quota: '+ data['quota'] +'  ' +
+            '\n Quota left: '+ data['quota_left'] +'  ' +
+            '\n';
     }
 
 }
