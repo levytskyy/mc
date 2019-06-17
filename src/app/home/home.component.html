@@ -89,7 +89,7 @@
                                 <p>users</p>
                                 <p>staked</p>
                             </div>
-                            <div class="token__list-scroll">
+                            <perfect-scrollbar class="token__list-scroll">
                                 <ng-container *ngFor="let item of data['providers']">
                                     <div class="token__list-item"
                                          *ngIf="!item['hidden']"
@@ -112,7 +112,7 @@
                                     </div>
                                 </ng-container>
 
-                            </div>
+                            </perfect-scrollbar>
                         </div>
                     </div>
                     <div class="box box__statistic box-3"
