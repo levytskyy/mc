@@ -32,6 +32,22 @@ const win = domino.createWindow(template);
 
 
 
+var http = require('http');
+var https = require('https');
+var privateKey  = fs.readFileSync('/etc/letsencrypt/live/dsp.mest.net/privkey.pem', 'utf8');
+var certificate = fs.readFileSync('/etc/letsencrypt/live/dsp.mest.net/fullchain.pem', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+httpServer.listen(80);
+httpsServer.listen(443);
+// Lots of other express stuff (app.use()'s)
+
+
+
+
+
 global['window'] = win;
 global['window']['document'] = win;
 global['document'] = win.document;
@@ -64,3 +80,5 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Node Express server listening on http://localhost:${PORT}`);
 });
+
+
