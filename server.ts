@@ -38,11 +38,7 @@ var privateKey  = fs.readFileSync('/etc/letsencrypt/live/dsp.mest.net/privkey.pe
 var certificate = fs.readFileSync('/etc/letsencrypt/live/dsp.mest.net/fullchain.pem', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
 
-var httpServer = http.createServer(app);
-var httpsServer = https.createServer(credentials, app);
-httpServer.listen(80);
-httpsServer.listen(443);
-// Lots of other express stuff (app.use()'s)
+
 
 
 
@@ -76,9 +72,13 @@ app.get('*', (req, res) => {
   res.render('index', { req });
 });
 
+
+var httpServer = https.createServer(credentials, app);
+
 // Start up the Node server
-app.listen(PORT, () => {
-  console.log(`Node Express server listening on http://localhost:${PORT}`);
+httpServer.listen(PORT, () => {
+  console.log(`Secure Express server listening on port ${PORT}`);
 });
+
 
 
