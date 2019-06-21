@@ -49,6 +49,9 @@
                                     <p *ngIf="!isLoading">Browse ALL</p>
                                     <p *ngIf="isLoading">Loading ...</p>
                                 </div>
+                            </div>
+
+                            <div class="box__welcome_full">
                                 <div class="user-balances">
                                     <p *ngIf="userBalances['dapp']['availableBalance'] != null">
                                         {{ userBalances['dapp']['availableBalance'] }}
@@ -60,6 +63,7 @@
                                     </p>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <div class="box box__tokens box-2"
