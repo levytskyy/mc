@@ -6,7 +6,7 @@ import {map, catchError} from "rxjs/operators";
 const {DappClient} = require("dapp-client");
 const fetch = require("isomorphic-fetch");
 
-const endpoint = "https://dsp.eosn.io";
+const endpoint = "https://api.eosnewyork.io";
 const client = new DappClient(endpoint, {fetch});
 
 

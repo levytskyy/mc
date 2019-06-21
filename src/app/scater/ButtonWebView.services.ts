@@ -30,7 +30,7 @@ import hodlUnstakeTransaction from './hodl-unstake-transaction'
 //DATA FETCHING STUFF
 import {DappClient} from "dapp-client";
 import fetch from "isomorphic-fetch";
-const endpoint = "https://dsp.eosn.io";
+const endpoint = "https://api.eosnewyork.io";
 const client = new DappClient(endpoint, {fetch})
 
 // Example environment type definition
@@ -58,10 +58,11 @@ var exampleNet = {
     chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
     rpcEndpoints: [{
         protocol: 'https',
-        host: 'api.eosn.io',
+        host: 'api.eosnewyork.io',
         port: 443,
     }]
 };
+
 
 import * as $ from 'jquery';
 
@@ -95,7 +96,7 @@ export class ButtonWebViewServices implements OnInit {
                     new Lynx([exampleNet]),
                     //new Ledger([exampleNet]), // BROKEN
                     new TokenPocket([exampleNet]),
-                    //new MeetOne([exampleNet])
+                    new MeetOne([exampleNet])
                 ], {containerElement: $('#ual-div')[0]});
             ul.init();
         });
@@ -158,21 +159,25 @@ export class ButtonWebViewServices implements OnInit {
 
             let found = false;
 
+
+
             for (let p = 0; p < json['providers'].length; p++) {
+
                 if (json['providers'][p]['provider'] === row['provider']) {
                     if (slash !== -1 && json['providers'][p]['website'] === '')
                         json['providers'][p]['website'] = uri.slice(8, slash)
 
-
                     found = false;
                     for (let s = 0; s < json['providers'][p]['services'].length; s++) {
+
                         if (json['providers'][p]['services'][s]['service'] === row['service']) {
 
                             found = false
                             for (let k = 0; k < json['providers'][p]['services'][s]['packages'].length; k++) {
                                 if (json['providers'][p]['services'][s]['packages'][k]['package_id'] === row['package_id']) {
-                                    found = true //PACKAGE FOUND
-                                    break //LEAVE THE PACKAGES LOOP
+                                    this.more(p,s,k);
+                                    found = true; //PACKAGE FOUND
+                                    break; //LEAVE THE PACKAGES LOOP
                                 }
                             }
                             if (found == false) //PACKAGE NOT FOUND
@@ -248,6 +253,41 @@ export class ButtonWebViewServices implements OnInit {
             }
         }
         return json;
+    }
+
+    async more(provider_index, service_index, package_index) {
+        const pkg = json['providers'][provider_index]['services'][service_index]['packages'][package_index]
+        let uri = pkg['package_json_uri'];
+        if (uri.startsWith("http") && uri.endsWith(".json")) {
+            try {
+                await fetch(uri).then(function(response) {
+                        if (response.status >= 400) {
+                            throw new Error("Bad response from server");
+                        }
+                        return response.json();
+                    }).then(function(info) {
+                        pkg['service_level_agreement'] = info['service_level_agreement'];
+                        pkg['description'] = info['description'];
+                        pkg['locations'] = info['locations'];
+                        pkg['pinning'] = info['pinning'];
+                        pkg['name'] = info['name'];
+                        uri = info['dsp_json_uri'];
+                        json['providers'][provider_index]['logo'] = info['logo'];
+                        if (uri.startsWith("http") && uri.endsWith("/dsp.json")) {
+                             fetch(uri)
+                                .then(function(response) {
+                                    if (response.status >= 400) {
+                                        throw new Error("Bad response from server");
+                                    }
+                                    return response.json();
+                                }).then(function(info) {
+                                    json['providers'][provider_index]['telegram'] = info['social']['telegram']
+                                })
+                        }
+                    });
+                json['providers'][provider_index]['services'][service_index]['packages'][package_index] = pkg
+            } catch (e) {}
+        }
     }
 
     addHodlStakeButtonEventListener(data) {

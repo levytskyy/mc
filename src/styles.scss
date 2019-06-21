@@ -18,7 +18,7 @@ body {
   color: #000000;
   font-weight: normal;
   font-family: 'orbitronregular', sans-serif, serif;
-  min-height: 500px;
+  min-height: 550px;
 }
 
 b, strong {
@@ -153,8 +153,47 @@ body, html{
   line-height: 1.4;
 }
 
+@media screen and (max-width: 480px){
+  #ual-modal{
+    position: fixed !important;
+    top: 50% !important;
+    left: 15px !important;
+    right: 15px !important;
+    margin: -100px 0 0 0!important;
+    width: auto !important;
+    height: auto !important;
+    overflow: hidden !important;
+    border-radius: 3px!important;
+  }
+  #ual-learnMoreContainer {
+    padding-bottom: 21px!important;
+  }
+  .ual-modal-close {
+    margin: 0!important;
+    position: absolute!important;
+    top: 15px!important;
+    right: 15px!important;
+  }
+  .ual-modal-content-description {
+    margin: 30px auto 0 auto;
+  }
+  #ual-modal-selection-content {
+    padding: 15px!important;
+  }
+}
+
+#ual-button{
+  border: none;
+}
+
+
+
 
 @media only screen and (max-width: 480px){
+      #ual-button {
+        width: 100%!important;
+        padding: 12px 20px!important;
+      }
       #ual-modal-selection-content {
         width: 100%!important;
         border: 0;

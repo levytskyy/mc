@@ -35,9 +35,10 @@
                             <span class="box__welcome-description">
                                Welcome to MISSION CONTROL where you now have a home for your DAPP Network participation purposes.
                             </span>
-                            <div class="box__welcome-button" id="ual-div"></div>
+
 
                             <div class="box__welcome_full">
+                                <div class="box__welcome-button" id="ual-div"></div>
                                 <div class="box__welcome__get-all" (click)="!isLoading ? onScatter() : null">
                                     <div class="icon">
                                         <img *ngIf="!isLoading" src=".././../assets/images/arrow-right.svg"/>
@@ -86,8 +87,8 @@
                             <div class="token__list-head">
                                 <p class="token__list-item_first">providers</p>
                                 <p>services</p>
-                                <p>users</p>
-                                <p>staked</p>
+                                <p class="token__list-onlydesktop">users</p>
+                                <p class="token__list-onlydesktop">staked</p>
                             </div>
                             <perfect-scrollbar class="token__list-scroll">
                                 <ng-container *ngFor="let item of data['providers']">
@@ -106,8 +107,8 @@
                                                 <p>{{ item.provider }}</p>
                                             </div>
                                             <div><p>{{ item.services ? item.services.length : 0 }}</p></div>
-                                            <div><p>{{ item.users ? item.users : 0 }}</p></div>
-                                            <div><p>{{ roundNumber(item.staked) }}</p></div>
+                                            <div class="token__list-onlydesktop"><p>{{ item.users ? item.users : 0 }}</p></div>
+                                            <div class="token__list-onlydesktop"><p>{{ roundNumber(item.staked) }}</p></div>
                                         </div>
                                     </div>
                                 </ng-container>
@@ -141,9 +142,10 @@
                            <ngx-charts-pie-chart
                                     *ngIf="isBrowser"
                                     class="box__statistic-chart"
-                                    [view]="[300, 300]"
+                                    [view]="[270, 270]"
                                     [scheme]="{domain: ['#23235c', '#C0C0C0']}"
                                     [results]="pieData"
+                                    legendPosition="below"
                                     [legendTitle]=null
                                     [legend]="true">
                             </ngx-charts-pie-chart>
