@@ -208,6 +208,10 @@ $blue-color: rgb(35, 35, 92);
   display: flex;
   flex-direction: column;
   background: #FFFFFF;
+  +.box{
+    border-left: 1px solid #ebebeb;
+  }
+
   &-1 {
     background: #FFFFFF;
     z-index: 10;

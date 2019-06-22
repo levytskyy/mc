@@ -199,15 +199,18 @@ export class HomeComponent implements OnInit {
     onScatter() {
         this.isLoading = true;
         this.buttonWebViewServices.getData().then(data => {
-            this.isLoading = false;
+            this.buttonWebViewServices.getAlways().then(data => {
+                this.isLoading = false;
 
-            this.data = data;
-            this.servicesFilter = this.getAllServices(data);
+                this.data = data;
+                this.servicesFilter = this.getAllServices(data);
 
-            this.setBoxVisible(2);
-            setTimeout(() => {
-                this.scrollToCard(1)
-            }, 100);
+                this.setBoxVisible(2);
+                setTimeout(() => {
+                    this.scrollToCard(1)
+                }, 100);
+            });
+
         });
 
     }
