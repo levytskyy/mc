@@ -30,7 +30,9 @@ import hodlUnstakeTransaction from './hodl-unstake-transaction'
 //DATA FETCHING STUFF
 import {DappClient} from "dapp-client";
 import fetch from "isomorphic-fetch";
-const endpoint = "https://api.eosnewyork.io";
+
+
+const endpoint = "https://api.main.alohaeos.com";
 const client = new DappClient(endpoint, {fetch})
 
 // Example environment type definition
@@ -59,7 +61,7 @@ var exampleNet = {
     chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
     rpcEndpoints: [{
         protocol: 'https',
-        host: 'api.eosnewyork.io',
+        host: 'api.main.alohaeos.com',
         port: 443,
     }]
 };
