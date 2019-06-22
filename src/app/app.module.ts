@@ -7,7 +7,7 @@ import {AppComponent} from './app.component';
 import {HomeComponent} from './home/home.component';
 import {TransferHttpCacheModule} from '@nguniversal/common';
 import {HttpClientModule} from '@angular/common/http';
-
+import { DeviceDetectorModule } from 'ngx-device-detector';
 
 //scroll
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
@@ -47,6 +47,7 @@ import { FormsModule } from '@angular/forms';
       { path: 'lazy', loadChildren: './lazy/lazy.module#LazyModule'},
       { path: 'lazy/nested', loadChildren: './lazy/lazy.module#LazyModule'}
     ]),
+    DeviceDetectorModule.forRoot(),
     TransferHttpCacheModule,
   ],
   exports:[

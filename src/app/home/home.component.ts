@@ -2,8 +2,8 @@ import {Component, HostListener, ViewEncapsulation, ViewChild, PLATFORM_ID, Inje
 import {trigger, transition, animate, style, state} from '@angular/animations'
 import {PerfectScrollbarComponent} from 'ngx-perfect-scrollbar';
 import {isPlatformBrowser} from '@angular/common';
-
-
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import {ButtonWebViewServices} from '../scater/ButtonWebView.services';
 import {AuthService} from '../services/auth.services';
 
@@ -31,6 +31,13 @@ import {AuthService} from '../services/auth.services';
 
 export class HomeComponent implements OnInit {
     @ViewChild('scroll') scrollEl: PerfectScrollbarComponent;
+
+    SCROLL_VERTICAL_CONFIG: PerfectScrollbarConfigInterface = {
+        suppressScrollX: true
+    };
+
+    isMobile:any = this.deviceService.isMobile() || this.deviceService.isTablet();
+
     isBrowser: boolean;
     screenWidth: number;
     lock: boolean = false;
@@ -117,7 +124,8 @@ export class HomeComponent implements OnInit {
 
     constructor(@Inject(PLATFORM_ID) platformId: string,
                 public buttonWebViewServices: ButtonWebViewServices,
-                public authService: AuthService){
+                public authService: AuthService,
+                private deviceService: DeviceDetectorService){
         this.isBrowser = isPlatformBrowser(platformId);
         if (this.isBrowser) {
             this.screenWidth = window.innerWidth;
@@ -125,6 +133,10 @@ export class HomeComponent implements OnInit {
                 this.cardWidth = this.screenWidth;
             }
             this.buttonWebViewServices.init();
+        }
+
+        if(this.isMobile){
+            this.SCROLL_VERTICAL_CONFIG = {}
         }
     }
 

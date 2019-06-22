@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" [ngClass]="{'is-mobile': isMobile}">
     <div class="background">
         <div class="stars"></div>
         <div class="twinkling"></div>
@@ -17,7 +17,7 @@
 
     <div class="content">
         <div class="content-wrap">
-            <perfect-scrollbar class="content-scroll" #scroll>
+            <perfect-scrollbar class="content-scroll" #scroll >
                 <div class="panel"
                      #panel
                      [ngStyle]="{'width': getCountVisibleBox() * cardWidth + (screenWidth > 650 ? screenWidth/2-cardWidth/2 : 0) + 'px'}">
@@ -95,7 +95,7 @@
                                 <p class="token__list-onlydesktop">users</p>
                                 <p class="token__list-onlydesktop">staked</p>
                             </div>
-                            <perfect-scrollbar class="token__list-scroll">
+                            <perfect-scrollbar class="token__list-scroll" [config]="SCROLL_VERTICAL_CONFIG">
                                 <ng-container *ngFor="let item of data['providers']">
                                     <div class="token__list-item"
                                          *ngIf="!item['hidden']"
@@ -198,12 +198,12 @@
                                                         {{ pack['name'] || pack['package_id'] }}
                                                     </p>
                                                     <div class="accordion-info"
-                                                         (mouseenter)="$event.stopImmediatePropagation()"
-                                                         (mouseleave)="$event.stopImmediatePropagation()"
+                                                         (mouseenter)="!isMobile ? $event.stopImmediatePropagation() : null"
+                                                         (mouseleave)="!isMobile ? $event.stopImmediatePropagation() : null"
                                                          #tooltip="matTooltip"
                                                          matTooltipClass="tooltip"
                                                          matTooltipPosition="before"
-                                                         (click)="tooltip.toggle()"
+                                                         (click)="!isMobile ? tooltip.toggle() : null"
                                                          matTooltip="{{ getPackageInfo(pack) }}">?</div>
                                                 </div>
                                             </div>

@@ -169,7 +169,7 @@ $blue-color: rgb(35, 35, 92);
   transition-delay: 0.25s;
 
   height: 100%;
-  max-height: 500px;
+
   //background: #FFFFFF;
 }
 
@@ -186,6 +186,7 @@ $blue-color: rgb(35, 35, 92);
   left: 50%;
   margin-left: -325px;
   box-shadow: 0 5px 16px 1px rgba(0, 0, 0, 0.4);
+  max-height: 500px;
 }
 
 .home--loader {
@@ -382,6 +383,8 @@ $blue-color: rgb(35, 35, 92);
   border: 1px solid #C0C0C0;
   border-radius: 4px;
   overflow: hidden;
+  display: flex;
+  height: 100%;
 }
 
 .token__list-item {
@@ -392,6 +395,7 @@ $blue-color: rgb(35, 35, 92);
   display: flex;
   align-items: center;
   cursor: pointer;
+  min-height: 40px;
   //overflow: hidden;
   &.disabled {
     opacity: .3;
@@ -536,6 +540,7 @@ $blue-color: rgb(35, 35, 92);
   justify-content: space-between;
   border-bottom: 1px solid silver;
   padding: 0 15px;
+  min-height: 48px;
   p {
     font-size: 14px;
     color: #000000;
@@ -589,7 +594,7 @@ $blue-color: rgb(35, 35, 92);
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   align-items: center;
   p {
     color: #000000;
@@ -609,6 +614,8 @@ $blue-color: rgb(35, 35, 92);
   margin: 0 5px 5px 5px;
   cursor: pointer;
   transition: .3s;
+  float: left;
+  min-height: 26px;
   &:hover {
     border: 1px solid rgb(255, 197, 151);
     /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffc597+0,ffdc93+100 */
@@ -1126,7 +1133,16 @@ $blue-color: rgb(35, 35, 92);
   background: #dedede!important;
 }
 
+.is-mobile{
+  .token__list-scroll{
 
+    overflow: auto;
+  }
+  .token__list{
+    display: block;
+    overflow: auto;
+  }
+}
 
 
 @media screen and (max-width: 980px) {
@@ -1137,7 +1153,7 @@ $blue-color: rgb(35, 35, 92);
     position: relative;
   }
   .content{
-    margin: -80px 0 15px 0;
+    margin: -95px 0 15px 0;
   }
   .header__logo{
     a{
@@ -1145,6 +1161,8 @@ $blue-color: rgb(35, 35, 92);
       flex-direction: column;
     }
   }
+
+
 }
 
 @media screen and (max-width: 880px) {
@@ -1168,10 +1186,10 @@ $blue-color: rgb(35, 35, 92);
 }
 
 @media screen and (max-width: 700px) {
-  .box__statistic-nav{
+  /*.box__statistic-nav{
     justify-content: flex-end;
     margin-bottom: 25px;
-  }
+  }*/
   .container{
     //height: auto;
     //margin: -80px 0 0 0;
@@ -1212,7 +1230,7 @@ $blue-color: rgb(35, 35, 92);
   }
   .box__package{
     .token__list {
-      //width: 100%;
+      width: 100%;
     }
   }
   .box__tokens {
@@ -1230,6 +1248,12 @@ $blue-color: rgb(35, 35, 92);
   }
   .lock-body {
     height: 127px;
+  }
+  .box__head-button{
+    right: 0;
+  }
+  .box__head-icon{
+    margin-right: 10px;
   }
 }
 
