@@ -1,7 +1,7 @@
 export default {
   actions: [{
     account: "dappservices",
-    name: "stake",
+    name: "unstake",
     authorization: [{
       actor: "", // use account that was logged in
       permission: "active",

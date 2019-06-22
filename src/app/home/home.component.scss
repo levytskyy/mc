@@ -356,7 +356,7 @@ $blue-color: rgb(35, 35, 92);
 
 .box__package{
   .token__list {
-    width: 90%;
+    width: 94%;
   }
 }
 
@@ -416,12 +416,18 @@ $blue-color: rgb(35, 35, 92);
       opacity: 1;
     }
   }
+  &.active {
+    &:after {
+      opacity: 1;
+    }
+  }
 }
 
 .accordion-item {
   .accordion-item__head {
     display: flex;
     align-items: center;
+    margin: 0 0 0 17px;
     label {
       font-size: 14px;
       margin: 0 0 0 15px;
@@ -439,19 +445,21 @@ $blue-color: rgb(35, 35, 92);
 }
 
 .accordion-sub__wrap {
-  margin: -6px 0 0 0;
+  margin: 0 0 0 0;
+  width: 100%;
 }
 
 .accordion-sub__item {
+  position: relative;
   padding: 10px 0 10px 50px;
   cursor: pointer;
   border-top: 1px solid silver;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   p {
     font-family: 'orbitron_mediumregular';
     font-size: 14px;
-
   }
   label {
     font-size: 14px;
@@ -472,6 +480,31 @@ $blue-color: rgb(35, 35, 92);
     background: linear-gradient(to right, rgba(255, 197, 151, 1) 0%, rgba(255, 220, 147, 1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffc597', endColorstr='#ffdc93', GradientType=1); /* IE6-9 */
   }
+}
+.accordion-info{
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px!important;
+  background: #135cd7;
+  color: #FFFFFF!important;
+  float: right;
+  margin: 0 15px 0 0 !important;
+  transition: .2s;
+  &:hover{
+    background: #f27091;
+  }
+}
+.accordion-info__box{
+  position: absolute;
+  top:0;
+  right: 0;
+  padding: 15px;
+  background: red;
 }
 
 .token__list-scroll {
@@ -605,14 +638,15 @@ $blue-color: rgb(35, 35, 92);
   cursor: pointer;
   height: 41px;
   position: relative;
-  &.no-active {
-    opacity: .5;
-    background: #C0C0C0;
-    cursor: inherit;
-  }
   .spinner {
 
   }
+}
+
+.no-active {
+  opacity: .5;
+  background: #C0C0C0;
+  cursor: inherit;
 }
 
 .box__head {
@@ -643,8 +677,9 @@ $blue-color: rgb(35, 35, 92);
 }
 
 .box__head-button {
+  position: relative;
   font-family: 'avenirregular';
-  top: 15px;
+  top: 0;
   right: 15px;
   padding: 10px 20px 6px 20px;
   font-size: 14px;
@@ -1069,6 +1104,10 @@ $blue-color: rgb(35, 35, 92);
   cursor: pointer;
   color: #FFFFFF;
   font-size: 16px;
+}
+
+.no-active-button{
+  background: #dedede!important;
 }
 
 

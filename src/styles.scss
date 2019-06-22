@@ -120,6 +120,9 @@ body, html{
 .mat-expansion-panel-spacing{
   margin: 0!important;
 }
+.mat-expansion-panel-header{
+  padding: 0;
+}
 
 .spinner {
   left: 50%;
@@ -145,12 +148,36 @@ body, html{
   100% { transform: rotate(360deg); transform: rotate(360deg); }
 }
 
-
+.mat-tooltip{
+  overflow: initial;
+}
 .tooltip {
   font-family: 'avenirregular'!important;
   font-size: 13px!important;
   white-space: pre-line!important;
-  line-height: 1.4;
+  line-height: 23px;
+  padding-left: 10px;
+  padding-right: 10px;
+  font-size: 13px!important;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  background: #f4708f;
+  background: #0f59d1;
+  background: linear-gradient(135deg, #0f59d1 0%, #2b6dff 40%, #ff7089 100%);
+  overflow: initial;
+  &:after{
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -10px;
+    content: "";
+    width: 0;
+    height: 0;
+    margin: -9px 0 0 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 10px solid #b070b7;
+  }
 }
 
 @media screen and (max-width: 480px){

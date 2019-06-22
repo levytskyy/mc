@@ -4,7 +4,6 @@ import {PerfectScrollbarComponent} from 'ngx-perfect-scrollbar';
 import {isPlatformBrowser} from '@angular/common';
 
 
-import {ScatterService} from '../services/scatter.services';
 import {ButtonWebViewServices} from '../scater/ButtonWebView.services';
 import {AuthService} from '../services/auth.services';
 
@@ -13,7 +12,7 @@ import {AuthService} from '../services/auth.services';
     templateUrl: 'home.component.html',
     styleUrls: ['home.component.scss'],
     encapsulation: ViewEncapsulation.Emulated,
-    providers: [ScatterService, ButtonWebViewServices],
+    providers: [ButtonWebViewServices],
     animations: [
         trigger(
             'enterAnimation', [
@@ -95,6 +94,7 @@ export class HomeComponent implements OnInit {
     isSignLoading:boolean = false;
     isSelectLoading:boolean = false;
     isAuthLoading:boolean = false;
+    isAuthorized:boolean = false;
 
     rateLockInput:number = 0;
     stakeQut:number = 1;
@@ -117,8 +117,7 @@ export class HomeComponent implements OnInit {
 
     constructor(@Inject(PLATFORM_ID) platformId: string,
                 public buttonWebViewServices: ButtonWebViewServices,
-                public authService: AuthService,
-                public scatterService: ScatterService) {
+                public authService: AuthService){
         this.isBrowser = isPlatformBrowser(platformId);
         if (this.isBrowser) {
             this.screenWidth = window.innerWidth;
@@ -129,64 +128,95 @@ export class HomeComponent implements OnInit {
         }
     }
 
+    updateDataAfterTransaction(){
+        this.buttonWebViewServices.getAlways().then(data => {
+            this.data = data;
+            this.servicesFilter = this.getAllServices(data);
+
+            this.buttonWebViewServices.getUserBallance().then(data => {
+                let dabpBallance = data['dapp']['rows']['length'] ? this.ballanceToInt(data['dapp']['rows'][0]['balance']) : 0;
+                let holdBallance = data['hodl']['rows']['length'] ? this.ballanceToInt(data['hodl']['rows'][0]['balance']) : 0;
+
+                if(dabpBallance){
+                    this.userBalances['dapp']['availableBalance'] = dabpBallance;
+                    this.userBalances['dapp']['newBalance'] = dabpBallance;
+                }
+
+                if(holdBallance){
+                    this.userBalances['hold']['availableBalance'] = holdBallance;
+                    this.userBalances['hold']['newBalance'] = holdBallance;
+                }
+            });
+        });
+    }
+
     ngOnInit() {
         this.authService.isAuth.subscribe(data => {
-            this.isAuthLoading = true;
+            if (data == 'no-authorized') {
+                this.isAuthorized = false;
+            }
+
             if (data == 'authorized') {
-                this.buttonWebViewServices.getData().then(data => {
-                    this.isLoading = false;
-                    this.data = data;
+                this.isAuthorized = true;
+                this.isAuthLoading = true;
+                    this.buttonWebViewServices.getData().then(data => {
+                        this.buttonWebViewServices.getAlways().then(data => {
+                            this.isLoading = false;
+                            this.data = data;
 
-                    console.log(data);
-                    this.servicesFilter = this.getAllServices(data);
+                            console.log(data);
 
-                    this.buttonWebViewServices.getAlways().then(data => {
-                        this.isAuthLoading = false;
-                        this.setBoxVisible(2);
-                        setTimeout(() => {
-                            this.scrollToCard(1)
-                        }, 100);
+                            this.servicesFilter = this.getAllServices(data);
 
-                        this.buttonWebViewServices.getUserBallance().then(data => {
+                            this.isAuthLoading = false;
+                            this.setBoxVisible(2);
+                            setTimeout(() => {
+                                this.scrollToCard(1)
+                            }, 100);
 
-                            let dabpBallance = data['dapp']['rows']['length'] ? this.ballanceToInt(data['dapp']['rows'][0]['balance']) : 0;
-                            let holdBallance = data['hodl']['rows']['length'] ? this.ballanceToInt(data['hodl']['rows'][0]['balance']) : 0;
+                            this.buttonWebViewServices.getUserBallance().then(data => {
 
-                            if(dabpBallance){
-                                this.userBalances['dapp']['availableBalance'] = dabpBallance;
-                                this.userBalances['dapp']['newBalance'] = dabpBallance;
-                            }
+                                let dabpBallance = data['dapp']['rows']['length'] ? this.ballanceToInt(data['dapp']['rows'][0]['balance']) : 0;
+                                let holdBallance = data['hodl']['rows']['length'] ? this.ballanceToInt(data['hodl']['rows'][0]['balance']) : 0;
 
-                            if(holdBallance){
-                                this.userBalances['hold']['availableBalance'] = holdBallance;
-                                this.userBalances['hold']['newBalance'] = holdBallance;
-                            }
+                                if(dabpBallance){
+                                    this.userBalances['dapp']['availableBalance'] = dabpBallance;
+                                    this.userBalances['dapp']['newBalance'] = dabpBallance;
+                                }
+
+                                if(holdBallance){
+                                    this.userBalances['hold']['availableBalance'] = holdBallance;
+                                    this.userBalances['hold']['newBalance'] = holdBallance;
+                                }
+                            });
                         });
-
-                    });
-
                 });
+
             }
         });
     }
 
     onScatter() {
         this.isLoading = true;
-        this.scatterService.getData().then(data => {
+        this.buttonWebViewServices.getData().then(data => {
             this.isLoading = false;
 
             this.data = data;
+            this.servicesFilter = this.getAllServices(data);
 
             this.setBoxVisible(2);
             setTimeout(() => {
                 this.scrollToCard(1)
             }, 100);
         });
+
     }
 
 
     onProvider(item:number) {
         this.currentProvider = item;
+
+        console.log(this.currentProvider);
 
         this.boxes[4]['visible'] = false;
         this.boxes[5]['visible'] = false;
@@ -278,6 +308,9 @@ export class HomeComponent implements OnInit {
         this.typeSign = 'stake';
         this.onNextCard(5);
 
+        this.setBallances(1, this.userBalanesType);
+        this.stakeQut = 1;
+
         //start animation after 800ms or 0ms
         let timeOut = this.boxes[4].visible ? 0 : 800;
         setTimeout(() => {
@@ -287,6 +320,9 @@ export class HomeComponent implements OnInit {
     onUnStake(){
         this.typeSign = 'unstake';
         this.onNextCard(5);
+
+        this.setBallances(this.currentProvider['user_staked'], this.userBalanesType);
+        this.stakeQut = this.currentProvider['user_staked'];
 
         //start animation after 800ms or 0ms
         let timeOut = this.boxes[4].visible ? 0 : 800;
@@ -331,13 +367,13 @@ export class HomeComponent implements OnInit {
 
         let _self = this;
         if(this.typeSign == 'stake'){
-
             if(this.userBalanesType == 'dapp'){
                 _self.lock = true;
                 this.buttonWebViewServices.addStakeButtonEventListener(data).then(data => {
                         _self.onNextCard(6);
                         this.isSignLoading = false;
                         this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
+                        this.updateDataAfterTransaction();
                     },
                     error => {
                         alert(error);
@@ -349,6 +385,7 @@ export class HomeComponent implements OnInit {
                         _self.onNextCard(6);
                         this.isSignLoading = false;
                         this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
+                        this.updateDataAfterTransaction();
                     },
                     error => {
                         alert(error);
@@ -356,15 +393,15 @@ export class HomeComponent implements OnInit {
                     });
             }
 
-
-
         }else if(this.typeSign == 'unstake'){
             _self.lock = false;
+
             this.buttonWebViewServices.addUnstakeButtonEventListener(data).then(data => {
                 _self.onNextCard(6);
                 this.isSignLoading = false;
 
                 this.transactionUrl = 'https://bloks.io/transaction/'+data['transaction']['transaction_id'];
+                this.updateDataAfterTransaction();
                 console.log('transaction', this.transactionUrl);
             },
             error => {
@@ -419,9 +456,12 @@ export class HomeComponent implements OnInit {
         return parseFloat(result);
     }
 
-    setBallances(event, code):void{
-        let value = event.target.value;
+    setBallances(value, code):void{
+        if(!value) return;
         this.userBalances[code]['newBalance'] = this.userBalances[code]['availableBalance'] - value;
+
+        let procent = value * 100 / (this.userBalances[this.userBalanesType]['availableBalance']);
+        this.rateLockInput = Math.round(procent);
     }
 
     getAllServices(data){

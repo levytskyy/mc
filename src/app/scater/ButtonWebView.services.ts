@@ -53,6 +53,7 @@ var json: any = {
     'staked': 0,
     'users': 0
 }
+var slate = {}
 
 var exampleNet = {
     chainId: 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906',
@@ -99,7 +100,9 @@ export class ButtonWebViewServices implements OnInit {
                     //new MeetOne([exampleNet])
                 ], {containerElement: $('#ual-div')[0]});
             ul.init();
+            _self.authService.onAuth('no-authorized');
         });
+
     }
 
     public getData() {
@@ -117,71 +120,75 @@ export class ButtonWebViewServices implements OnInit {
     }
 
     async once() {
-        const response = await client.get_table_package({limit: 500});
-        if (!response) this.once();
+        const response = await client.get_table_package({limit: 999999});
+        if(!response) this.once();
+
+
+        console.log(response);
 
         for (const row of response.rows) {
             if (row['api_endpoint'] == 'null')
                 continue
 
-            let pkg = {
+            var pkg = {
                 'package_id': row['package_id'],
                 'quota': row['quota'],
                 'package_period': row['package_period'],
                 'min_stake_quantity': row['min_stake_quantity'],
                 'min_unstake_period': row['min_unstake_period'],
+                'package_json_uri': row['package_json_uri'],
                 'users': 0,
                 'staked': 0,
                 'user_staked': 0, //starting quota is (user_staked/min_stake_quantity) * quota
                 'user_expire': 0, //if this is not 0...
                 'quota_left': 0 //...then 0 here means no more quota left, all starting quota used
             }
-            let service = {
-                'service': row['service'],
+            var service = {
+                'service':row['service'],
                 'packages': [pkg],
                 'staked': 0,
                 'users': 0,
                 'user_staked': 0,
             }
-            let provider = {
-                'provider': row['provider'],
-                'enabled': row['enabled'],
+            var provider = {
+                'provider' : row['provider'],
+                'enabled' : row['enabled'],
                 'users': 0,
                 'staked': 0,
                 'user_staked': 0,
                 'website': '',
-                'services': [service],
+                'services' : [service],
             }
-            let uri = row['package_json_uri']
-            let slash = uri.lastIndexOf('/')
+            var uri = row['package_json_uri'];
+
+
+
+            var slash = uri.lastIndexOf('/')
             if (slash !== -1)
                 provider['website'] = uri.slice(8, slash)
 
-            let found = false;
+            var found = false
 
-
-
-            for (let p = 0; p < json['providers'].length; p++) {
-
+            for (var p = 0; p < json['providers'].length; p++) {
                 if (json['providers'][p]['provider'] === row['provider']) {
                     if (slash !== -1 && json['providers'][p]['website'] === '')
                         json['providers'][p]['website'] = uri.slice(8, slash)
 
+
                     found = false;
-                    for (let s = 0; s < json['providers'][p]['services'].length; s++) {
-
+                    for (var s = 0; s < json['providers'][p]['services'].length; s++ ) {
                         if (json['providers'][p]['services'][s]['service'] === row['service']) {
-
-                            found = false
-                            for (let k = 0; k < json['providers'][p]['services'][s]['packages'].length; k++) {
-                                if (json['providers'][p]['services'][s]['packages'][k]['package_id'] === row['package_id']) {
-                                    this.more(p,s,k);
-                                    found = true; //PACKAGE FOUND
-                                    break; //LEAVE THE PACKAGES LOOP
-                                }
-                            }
-                            if (found == false) //PACKAGE NOT FOUND
-                                json['providers'][p]['services'][s]['packages'].push(pkg) //ADD THE PACKAGE
+                            //this.more(p,s,k);
+                            /*found = false
+                             for (var k = 0; k < json['providers'][p]['services'][s]['packages'].length; k++ ) {
+                             if (json['providers'][p]['services'][s]['service'][s]['packages'][k]['package_id'] === row['package_id']) {
+                             found = true //PACKAGE FOUND
+                             break //LEAVE THE PACKAGES LOOP
+                             }
+                             }
+                             if (found == false) //PACKAGE NOT FOUND
+                             */
+                            json['providers'][p]['services'][s]['packages'].push(pkg) //ADD THE PACKAGE
 
 
                             found = true //FOUND THE SERVICE
@@ -196,14 +203,22 @@ export class ButtonWebViewServices implements OnInit {
                     break //LEAVE THE PROVIDER LOOP
                 }
             }
+
+            /*for (const row2 of response.rows) {
+
+            }*/
+
             if (found == false)
                 json['providers'].push(provider)
         }
+        //this.always();
         return json;
     }
 
     async always() {
         const response = await client.get_table_accountext({limit: 99999999999});
+
+
         let userAccountName;
         if (loggedInUser) {
             userAccountName = await loggedInUser['accountName'];
@@ -218,11 +233,11 @@ export class ButtonWebViewServices implements OnInit {
 
             for (var p = 0; p < json['providers'].length; p++) {
                 if (json['providers'][p]['provider'] === row['provider']) {
-                    json['providers'][p]['users'] += 1
-                    json['providers'][p]['staked'] += balance
+                    json['providers'][p]['users'] += 1;
+                    json['providers'][p]['staked'] += balance;
 
                     if (own)
-                        json['providers'][p]['user_staked'] += balance
+                        json['providers'][p]['user_staked'] += balance;
 
                     for (var s = 0; s < json['providers'][p]['services'].length; s++) {
                         if (json['providers'][p]['services'][s]['service'] === row['service']) {
@@ -338,7 +353,7 @@ export class ButtonWebViewServices implements OnInit {
     addStakeButtonEventListener(data) {
         return new Promise((resolve, reject) => {
             if (!loggedInUser) {
-                reject('Error: You are not authorized');
+                reject('Error: You are not authorized!');
             }
 
             const userAccountName = loggedInUser['accountName'];
@@ -375,6 +390,8 @@ export class ButtonWebViewServices implements OnInit {
             unstakeTransaction.actions[0].data.provider = data['provider'];
             unstakeTransaction.actions[0].data.service = data['service'];
             unstakeTransaction.actions[0].data.quantity = data['quantity'];
+
+            console.log(unstakeTransaction);
 
             loggedInUser.signTransaction(
                 unstakeTransaction,

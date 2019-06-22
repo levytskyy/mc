@@ -99,7 +99,8 @@
                                     <div class="token__list-item"
                                          *ngIf="!item['hidden']"
                                          (click)="item.enabled != 0 ? onProvider(item) : null"
-                                         [ngClass]="{'disabled':item.enabled == 0}">
+                                         [ngClass]="{'disabled':item.enabled == 0,
+                                         'active': item.provider == (currentProvider ? currentProvider['provider'] : null)}">
                                         <div class="token__list-item_wrap">
                                             <div class="token__list-item_first">
                                                 <ng-container *ngIf="item.provider">
@@ -192,27 +193,34 @@
                                                      *ngFor="let pack of item['packages']"
                                                      [ngClass]="{'active': pack['package_id'] == selectedPackage['package']}"
                                                      (click)="setCurrentIdPackage(item['service'], pack['package_id'])">
-                                                    <p mat-raised-button
-                                                       matTooltipClass="tooltip"
-                                                       matTooltipPosition="right"
-                                                       matTooltip="{{ getPackageInfo(pack) }}">
+                                                    <p>
                                                         {{ pack['name'] || pack['package_id'] }}
                                                     </p>
-                                                    <label>({{ pack['users'] }} users)</label>
+                                                    <div class="accordion-info"
+                                                         (mouseenter)="$event.stopImmediatePropagation()"
+                                                         (mouseleave)="$event.stopImmediatePropagation()"
+                                                         #tooltip="matTooltip"
+                                                         matTooltipClass="tooltip"
+                                                         matTooltipPosition="right"
+                                                         (click)="tooltip.toggle()"
+                                                         matTooltip="{{ getPackageInfo(pack) }}">?</div>
                                                 </div>
                                             </div>
-
                                         </mat-expansion-panel>
                                     </mat-accordion>
                                 </div>
                             </div>
                             <div class="box__package-button"
-                                 (click)="!isSelectLoading ? onSelect() : null"
-                                 [ngClass]="{'no-active': !selectedPackage['service']}">
+                                 (click)="!isSelectLoading && isAuthorized ? onSelect() : null"
+                                 [ngClass]="{'no-active': !selectedPackage['service'] || !isAuthorized}"
+                                 #tooltipSelect="matTooltip"
+                                 matTooltip="{{ !isAuthorized ? 'You are not authorized!' : null }}">
                                 <div *ngIf="isSelectLoading" class="spinner">
                                     <div class="spinner-icon"></div>
                                 </div>
-                                <ng-container *ngIf="!isSelectLoading">Select</ng-container>
+                                <ng-container *ngIf="!isSelectLoading">
+                                    Select
+                                </ng-container>
                             </div>
 
                             <div class="box__statistic-nav">
@@ -240,7 +248,11 @@
                                      [src]="'../../assets/images/providers/' + currentProvider['provider'] + '.svg'">
                             </a>
                             <p>{{ currentProvider ? currentProvider['provider'] : '' }} - LOCK</p>
-                            <div class="box__head-button" (click)="!isSignLoading ? onSignTransaction() : null">
+                            <div class="box__head-button"
+                                 (click)="!isSignLoading && isAuthorized ? onSignTransaction() : null"
+                                 [ngClass]="{'no-active': !isAuthorized}"
+                                 #tooltipSelect="matTooltip"
+                                 matTooltip="{{ !isAuthorized ? 'You are not authorized!' : null }}">
                                 <div *ngIf="isSignLoading" class="spinner">
                                     <div class="spinner-icon"></div>
                                 </div>
@@ -279,7 +291,7 @@
                                     <input type="number"
                                            [(ngModel)]="stakeQut"
                                            [ngClass]="{'error': userBalances[userBalanesType]['newBalance'] < 0 || stakeQut < 0}"
-                                           (keyup)="setBallances($event, userBalanesType)" value="1"
+                                           (keyup)="setBallances($event['target']['value'], userBalanesType)" value="1"
                                     />
                                 </div>
                                 <div class="lock-info__item lock-info__item-footer">
