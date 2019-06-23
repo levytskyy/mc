@@ -77,6 +77,7 @@ export class HomeComponent implements OnInit {
 
     data: any;
     currentProvider:any;
+    currentProviderTelegram:any;
 
     selectedPackage = {
         provider: null,
@@ -100,6 +101,7 @@ export class HomeComponent implements OnInit {
     isLoading:boolean = false;
     isSignLoading:boolean = false;
     isSelectLoading:boolean = false;
+    isChoosePackageLoading:boolean = false;
     isAuthLoading:boolean = false;
     isAuthorized:boolean = false;
 
@@ -113,6 +115,8 @@ export class HomeComponent implements OnInit {
 
     servicesFilter:any[] = [];
     selectedFilter:string = 'all';
+
+    currentProviderInfo:any;
 
     @HostListener('window:resize', ['$event'])
     onResize(event?) {
@@ -174,6 +178,9 @@ export class HomeComponent implements OnInit {
                     this.buttonWebViewServices.getData().then(data => {
                         this.buttonWebViewServices.getAlways().then(data => {
                             this.isLoading = false;
+
+
+
                             this.data = data;
 
                             console.log(data);
@@ -208,6 +215,8 @@ export class HomeComponent implements OnInit {
         });
     }
 
+
+
     onScatter() {
         this.isLoading = true;
         this.buttonWebViewServices.getData().then(data => {
@@ -230,8 +239,6 @@ export class HomeComponent implements OnInit {
 
     onProvider(item:number) {
         this.currentProvider = item;
-
-        console.log(this.currentProvider);
 
         this.boxes[4]['visible'] = false;
         this.boxes[5]['visible'] = false;
@@ -498,6 +505,22 @@ export class HomeComponent implements OnInit {
         return self.indexOf(value) === index;
     }
 
+    onFilterMyProviders(){
+        let data = this.data;
+        if(!data) return;
+        this.selectedFilter = 'my-providers';
+
+        for(let i in this.data['providers']){
+            this.data['providers'][i]['hidden'] = true;
+        }
+
+        for(let i in data['providers']){
+            if(data['providers'][i]['user_staked']  > 0){
+                this.data['providers'][i]['hidden'] = false;
+            }
+        }
+    }
+
     onFilterProviders(filter){
         let data = this.data;
         if(!data) return;
@@ -532,6 +555,26 @@ export class HomeComponent implements OnInit {
     roundPlus(num) {
         return num.toFixed(4);
     }
+
+
+    choosePackage(){
+        this.isChoosePackageLoading = true;
+        this.buttonWebViewServices.getMore(this.currentProvider['provider']).then(data => {
+            this.isChoosePackageLoading = false;
+            console.log('data', data);
+
+            this.currentProviderInfo = data;
+            this.onNextCard(4);
+
+            if(data && data['dsp_json_uri']){
+                this.buttonWebViewServices.getTelegram(data['dsp_json_uri']).then(data2 => {
+                    console.log('data-2', data2);
+                    this.currentProviderTelegram = data2['social']['telegram'];
+                });
+            }
+        });
+    }
+
 
     getPackageInfo(data): any {
         return 'Staked: '+ data['staked'] +'' +

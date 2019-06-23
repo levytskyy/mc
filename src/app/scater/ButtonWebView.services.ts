@@ -66,6 +66,7 @@ var exampleNet = {
     }]
 };
 
+var found = false;
 
 import * as $ from 'jquery';
 
@@ -121,12 +122,24 @@ export class ButtonWebViewServices implements OnInit {
         })
     }
 
+    public getMore(provider) {
+        let self = this;
+        return new Promise((resolve) => {
+            resolve(self.more(provider));
+        })
+    }
+
+    public getTelegram(dsp_json_uri) {
+        let self = this;
+        return new Promise((resolve) => {
+            resolve(self.more2(dsp_json_uri));
+        })
+    }
+
+
     async once() {
-        const response = await client.get_table_package({limit: 999999});
+        const response = await client.get_table_package({limit: 500});
         if(!response) this.once();
-
-
-        console.log(response);
 
         for (const row of response.rows) {
             if (row['api_endpoint'] == 'null')
@@ -135,10 +148,10 @@ export class ButtonWebViewServices implements OnInit {
             var pkg = {
                 'package_id': row['package_id'],
                 'quota': row['quota'],
+                'package_json_uri': row['package_json_uri'],
                 'package_period': row['package_period'],
                 'min_stake_quantity': row['min_stake_quantity'],
                 'min_unstake_period': row['min_unstake_period'],
-                'package_json_uri': row['package_json_uri'],
                 'users': 0,
                 'staked': 0,
                 'user_staked': 0, //starting quota is (user_staked/min_stake_quantity) * quota
@@ -155,21 +168,19 @@ export class ButtonWebViewServices implements OnInit {
             var provider = {
                 'provider' : row['provider'],
                 'enabled' : row['enabled'],
+
                 'users': 0,
                 'staked': 0,
                 'user_staked': 0,
                 'website': '',
                 'services' : [service],
             }
-            var uri = row['package_json_uri'];
-
-
-
+            var uri = row['package_json_uri']
             var slash = uri.lastIndexOf('/')
             if (slash !== -1)
                 provider['website'] = uri.slice(8, slash)
 
-            var found = false
+            found = false
 
             for (var p = 0; p < json['providers'].length; p++) {
                 if (json['providers'][p]['provider'] === row['provider']) {
@@ -180,7 +191,9 @@ export class ButtonWebViewServices implements OnInit {
                     found = false;
                     for (var s = 0; s < json['providers'][p]['services'].length; s++ ) {
                         if (json['providers'][p]['services'][s]['service'] === row['service']) {
-                            //this.more(p,s,k);
+
+
+
                             /*found = false
                              for (var k = 0; k < json['providers'][p]['services'][s]['packages'].length; k++ ) {
                              if (json['providers'][p]['services'][s]['service'][s]['packages'][k]['package_id'] === row['package_id']) {
@@ -205,52 +218,50 @@ export class ButtonWebViewServices implements OnInit {
                     break //LEAVE THE PROVIDER LOOP
                 }
             }
-
-            /*for (const row2 of response.rows) {
-
-            }*/
-
             if (found == false)
                 json['providers'].push(provider)
         }
-        //this.always();
+        slate = json;
         return json;
     }
 
     async always() {
-        const response = await client.get_table_accountext({limit: 99999999999});
+        const response = await client.get_table_accountext({limit: -1});
+        let userAccountName = await loggedInUser.getAccountName();
+        if(!userAccountName) userAccountName = '';
 
-
-        let userAccountName;
-        if (loggedInUser) {
-            userAccountName = await loggedInUser['accountName'];
-        }
 
         for (const row of response.rows) {
-            const balance = parseFloat(row['balance'].split(' ')[0]);
-            const own = userAccountName === row['account'];
+            const balance = parseFloat(row['balance'].split(' ')[0])
+            const own = userAccountName === row['account']
 
-            json['staked'] += balance;
-            json['users'] += 1;
+            json['staked'] += balance
+            json['users'] += 1
 
-            for (var p = 0; p < json['providers'].length; p++) {
-                if (json['providers'][p]['provider'] === row['provider']) {
-                    json['providers'][p]['users'] += 1;
-                    json['providers'][p]['staked'] += balance;
+            for (var p = 0; p < json['providers'].length; p++)
+            {
+                if (json['providers'][p]['provider'] === row['provider'])
+                {
+                    json['providers'][p]['users'] += 1
+                    json['providers'][p]['staked'] += balance
 
                     if (own)
-                        json['providers'][p]['user_staked'] += balance;
+                        json['providers'][p]['user_staked'] += balance
 
-                    for (var s = 0; s < json['providers'][p]['services'].length; s++) {
-                        if (json['providers'][p]['services'][s]['service'] === row['service']) {
+                    for (var s = 0; s < json['providers'][p]['services'].length; s++ )
+                    {
+                        if(json['providers'][p]['services'][s]['service'] === row['service'])
+                        {
                             json['providers'][p]['services'][s]['users'] += 1
                             json['providers'][p]['services'][s]['staked'] += balance
 
                             if (own)
                                 json['providers'][p]['services'][s]['user_staked'] += balance
 
-                            for (var k = 0; k < json['providers'][p]['services'][s]['packages'].length; k++) {
-                                if (json['providers'][p]['services'][s]['packages'][k]['package_id'] === row['pending_package']) {
+                            for (var k = 0; k < json['providers'][p]['services'][s]['packages'].length; k++)
+                            {
+                                if (json['providers'][p]['services'][s]['packages'][k]['package_id'] === row['pending_package'])
+                                {
                                     json['providers'][p]['services'][s]['packages'][k]['users'] += 1
                                     json['providers'][p]['services'][s]['packages'][k]['staked'] += balance
 
@@ -272,38 +283,57 @@ export class ButtonWebViewServices implements OnInit {
         return json;
     }
 
-    async more(provider_index, service_index, package_index) {
-        const pkg = json['providers'][provider_index]['services'][service_index]['packages'][package_index]
-        let uri = pkg['package_json_uri'];
+    async more(provider) {
+        let found = false
+        var p;
+        for (p = 0; p < slate['providers'].length; p++)
+            if (slate['providers'][p]['provider'] === provider) {
+                found = true;
+                break;
+            }
+        if (!found)
+            return
+
+        const pkg = slate['providers'][p]['services'][0]['packages'][0]
+        var uri = pkg['package_json_uri'];
+
+        let results = {};
         if (uri.startsWith("http") && uri.endsWith(".json")) {
             try {
-                await fetch(uri).then(function(response) {
-                        if (response.status >= 400) {
+                return await fetch(uri)
+                    .then(function(response) {
+                        if (response.status >= 400)
                             throw new Error("Bad response from server");
-                        }
                         return response.json();
                     }).then(function(info) {
-                        pkg['service_level_agreement'] = info['service_level_agreement'];
-                        pkg['description'] = info['description'];
-                        pkg['locations'] = info['locations'];
-                        pkg['pinning'] = info['pinning'];
-                        pkg['name'] = info['name'];
-                        uri = info['dsp_json_uri'];
-                        json['providers'][provider_index]['logo'] = info['logo'];
-                        if (uri.startsWith("http") && uri.endsWith("/dsp.json")) {
-                             fetch(uri)
-                                .then(function(response) {
-                                    if (response.status >= 400) {
-                                        throw new Error("Bad response from server");
-                                    }
-                                    return response.json();
-                                }).then(function(info) {
-                                    json['providers'][provider_index]['telegram'] = info['social']['telegram']
-                                })
-                        }
-                    });
-                json['providers'][provider_index]['services'][service_index]['packages'][package_index] = pkg
+                        results = {
+                            description: info['description'],
+                            locations: info['locations'],
+                            logo: info['logo'],
+                            dsp_json_uri: info['dsp_json_uri']
+                        };
+                        return results;
+
+                       /* else{
+
+                        }*/
+                })
             } catch (e) {}
+        }
+    }
+
+    async more2(dsp_json_uri) {
+        let uri = dsp_json_uri;
+        if (uri.startsWith("http") && uri.endsWith("/dsp.json")) {
+            return fetch(uri)
+                .then(function(response) {
+                    if (response.status >= 400) {
+                        throw new Error("Bad response from server");
+                    }
+                    return response.json();
+                }).then(function(info) {
+                    return info;
+                })
         }
     }
 

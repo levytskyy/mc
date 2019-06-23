@@ -36,8 +36,6 @@
                             <span class="box__welcome-description">
                                Welcome to MISSION CONTROL where you now have a home for your DAPP Network participation purposes.
                             </span>
-
-
                             <div class="box__welcome_full">
                                 <div class="box__welcome-button" id="ual-div"></div>
                                 <div class="box__welcome__get-all" (click)="!isLoading ? onScatter() : null">
@@ -51,7 +49,6 @@
                                     <p *ngIf="isLoading">Loading ...</p>
                                 </div>
                             </div>
-
                             <div class="box__welcome_full">
                                 <div class="user-balances">
                                     <p *ngIf="userBalances['dapp']['availableBalance'] != null">
@@ -64,7 +61,6 @@
                                     </p>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                     <div class="box box__tokens box-2"
@@ -78,6 +74,11 @@
                                  [ngClass]="{'active': item == selectedFilter}"
                                  (click)="onFilterProviders('all')">
                                 All
+                            </div>
+                            <div class="box__tokens-head_button"
+                                 [ngClass]="{'active': selectedFilter == 'my-providers'}"
+                                 (click)="onFilterMyProviders()">
+                                my providers
                             </div>
                             <ng-container *ngFor="let item of servicesFilter">
                                 <div class="box__tokens-head_button"
@@ -118,7 +119,6 @@
                                         </div>
                                     </div>
                                 </ng-container>
-
                             </perfect-scrollbar>
                         </div>
                     </div>
@@ -136,13 +136,13 @@
                         </div>
                         <div class="box__statistic-body" *ngIf="currentProvider">
                             <div class="box__statistic-tab">
-                                <button
-                                        [ngClass]="{'active': pieData[0]['type'] == 1}"
-                                        (click)="onSelectTypePipe(1)">Users
+                                <button [ngClass]="{'active': pieData[0]['type'] == 1}"
+                                        (click)="onSelectTypePipe(1)">
+                                    Users
                                 </button>
-                                <button
-                                        [ngClass]="{'active': pieData[0]['type'] == 2}"
-                                        (click)="onSelectTypePipe(2)">Staked
+                                <button [ngClass]="{'active': pieData[0]['type'] == 2}"
+                                        (click)="onSelectTypePipe(2)">
+                                    Staked
                                 </button>
                             </div>
                            <ngx-charts-pie-chart
@@ -156,8 +156,11 @@
                             </ngx-charts-pie-chart>
                             <div class="box__statistic-nav">
                                 <div class="box__statistic-button package"
-                                     (click)="onNextCard(4);">
-                                    <p>Choose Package</p>
+                                     (click)="choosePackage()">
+                                    <div *ngIf="isChoosePackageLoading" class="spinner">
+                                        <div class="spinner-icon"></div>
+                                    </div>
+                                    <p *ngIf="!isChoosePackageLoading">Choose Package</p>
                                 </div>
                             </div>
                         </div>
@@ -175,6 +178,14 @@
                             </a>
                             <p>{{ currentProvider ? currentProvider['provider'] : '' }} - Choose a Package</p>
                         </div>
+
+                        <div class="box__package-info" *ngIf="currentProviderInfo">
+                            <div class="box__package-info-wrap">
+                                <p>Description: <b>{{ currentProviderInfo['description'] }}</b></p>
+                                <p *ngIf="currentProviderInfo['locations']">Country: <b>{{ currentProviderInfo['locations'][0]['name'] }}</b></p>
+                            </div>
+                        </div>
+
                         <div class="box__package-body">
                             <div class="token__list">
                                 <div class="token__list-scroll" *ngIf="currentProvider">
@@ -331,9 +342,9 @@
                             </a>
 
                             <div class="box__success-button" (click)="onChooseToken()">Choose a different provider</div>
-                            <!--<a href="https://telegram.me/levytskyy"
+                            <a *ngIf="currentProviderTelegram" href="https://telegram.me/{{ currentProviderTelegram }}"
                                target="_blank"
-                               class="box__success-button light" >Telegram Channel</a>-->
+                               class="box__success-button light" >Telegram Channel</a>
                         </div>
                     </div>
                     <!--<div class="box box__contactus box-7"
