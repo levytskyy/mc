@@ -651,6 +651,7 @@ $blue-color: rgb(35, 35, 92);
   justify-content: space-between;
   border-radius: 6px;
   margin: 0 0 0 19px;
+  overflow: hidden;
   p{
     &:nth-child(1){
       width: 63%;

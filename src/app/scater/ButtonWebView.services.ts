@@ -138,6 +138,11 @@ export class ButtonWebViewServices implements OnInit {
 
 
     async once() {
+        json = {
+            'providers': [],
+            'staked': 0,
+            'users': 0
+        }
         const response = await client.get_table_package({limit: 500});
         if(!response) this.once();
 
@@ -226,6 +231,7 @@ export class ButtonWebViewServices implements OnInit {
     }
 
     async always() {
+        json = slate;
         const response = await client.get_table_accountext({limit: -1});
         let userAccountName;
 

@@ -179,8 +179,6 @@ export class HomeComponent implements OnInit {
                         this.buttonWebViewServices.getAlways().then(data => {
                             this.isLoading = false;
 
-
-
                             this.data = data;
 
                             console.log(data);
@@ -218,12 +216,16 @@ export class HomeComponent implements OnInit {
 
 
     onScatter() {
+        this.data = [];
         this.isLoading = true;
         this.buttonWebViewServices.getData().then(data => {
             this.buttonWebViewServices.getAlways().then(data => {
                 this.isLoading = false;
 
                 this.data = data;
+
+                console.log(data);
+
                 this.servicesFilter = this.getAllServices(data);
 
                 this.setBoxVisible(2);
@@ -561,14 +563,12 @@ export class HomeComponent implements OnInit {
         this.isChoosePackageLoading = true;
         this.buttonWebViewServices.getMore(this.currentProvider['provider']).then(data => {
             this.isChoosePackageLoading = false;
-            console.log('data', data);
 
             this.currentProviderInfo = data;
             this.onNextCard(4);
 
             if(data && data['dsp_json_uri']){
                 this.buttonWebViewServices.getTelegram(data['dsp_json_uri']).then(data2 => {
-                    console.log('data-2', data2);
                     this.currentProviderTelegram = data2['social']['telegram'];
                 });
             }
