@@ -302,7 +302,7 @@
                                              src="../../assets/images/{{ userBalanesType }}.png"/>
                                         <p>New Balance:</p>
                                     </div>
-                                    <b>{{ userBalances[userBalanesType]['newBalance'] || 0 }} {{
+                                    <b>{{ roundPlus(userBalances[userBalanesType]['newBalance']) || 0 }} {{
                                         userBalances[userBalanesType]['code'] }}</b>
                                 </div>
                             </div>
