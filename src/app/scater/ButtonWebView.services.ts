@@ -227,7 +227,15 @@ export class ButtonWebViewServices implements OnInit {
 
     async always() {
         const response = await client.get_table_accountext({limit: -1});
-        let userAccountName = await loggedInUser.getAccountName();
+        let userAccountName;
+
+
+        try {
+            userAccountName = await loggedInUser.getAccountName();
+        } catch(e) {
+            userAccountName = '';
+        }
+
         if(!userAccountName) userAccountName = '';
 
 
