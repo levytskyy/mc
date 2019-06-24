@@ -24,6 +24,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import {MatExpansionModule} from '@angular/material/expansion';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { WindowRef } from './services/window.services';
+import { SortByName } from './services/sortbyname';
 
 import {AuthService} from './services/auth.services';
 import { FormsModule } from '@angular/forms';
@@ -32,6 +33,7 @@ import { FormsModule } from '@angular/forms';
   declarations: [
     AppComponent,
     HomeComponent,
+    SortByName,
   ],
   imports: [
     BrowserModule.withServerTransition({appId: 'my-app'}),
@@ -48,11 +50,12 @@ import { FormsModule } from '@angular/forms';
       { path: 'lazy/nested', loadChildren: './lazy/lazy.module#LazyModule'}
     ]),
     DeviceDetectorModule.forRoot(),
-    TransferHttpCacheModule,
+    TransferHttpCacheModule
   ],
   exports:[
     MatExpansionModule,
-    MatTooltipModule
+    MatTooltipModule,
+    SortByName
   ],
   providers: [
     {

@@ -52,11 +52,11 @@
                             <div class="box__welcome_full">
                                 <div class="user-balances">
                                     <p *ngIf="userBalances['dapp']['availableBalance'] != null">
-                                        {{ userBalances['dapp']['availableBalance'] }}
+                                        {{ userBalances['dapp']['availableBalance'] | number }}
                                         <label>DAPP</label>
                                     </p>
                                     <p *ngIf="userBalances['hodl']['availableBalance'] != null">
-                                        {{ userBalances['hodl']['availableBalance'] }}
+                                        {{ userBalances['hodl']['availableBalance'] | number }}
                                         <label>HODL</label>
                                     </p>
                                 </div>
@@ -97,7 +97,7 @@
                                 <p class="token__list-onlydesktop">staked</p>
                             </div>
                             <perfect-scrollbar class="token__list-scroll" [config]="SCROLL_VERTICAL_CONFIG">
-                                <ng-container *ngFor="let item of data['providers']">
+                                <ng-container *ngFor="let item of data['providers'] | sortByName ">
                                     <div class="token__list-item"
                                          *ngIf="!item['hidden']"
                                          (click)="item.enabled != 0 ? onProvider(item) : null"
@@ -115,7 +115,7 @@
                                             </div>
                                             <div><p>{{ item.services ? item.services.length : 0 }}</p></div>
                                             <div class="token__list-onlydesktop"><p>{{ item.users ? item.users : 0 }}</p></div>
-                                            <div class="token__list-onlydesktop"><p>{{ roundNumber(item.staked) }}</p></div>
+                                            <div class="token__list-onlydesktop"><p>{{ roundNumber(item.staked) | number }}</p></div>
                                         </div>
                                     </div>
                                 </ng-container>
@@ -182,7 +182,7 @@
                         <div class="box__package-info" *ngIf="currentProviderInfo">
                             <div class="box__package-info-wrap">
                                 <p>Description: <b>{{ currentProviderInfo['description'] }}</b></p>
-                                <p *ngIf="currentProviderInfo['locations']">Country: <b>{{ currentProviderInfo['locations'][0]['name'] }}</b></p>
+                                <p *ngIf="currentProviderInfo['locations']">City: <b>{{ currentProviderInfo['locations'][0]['name'] }}</b></p>
                             </div>
                         </div>
 
@@ -226,6 +226,7 @@
                                  (click)="!isSelectLoading && isAuthorized ? onSelect() : null"
                                  [ngClass]="{'no-active': !selectedPackage['service'] || !isAuthorized}"
                                  #tooltipSelect="matTooltip"
+                                 matTooltipClass="tooltip-auth"
                                  matTooltip="{{ !isAuthorized ? 'You are not authorized!' : null }}">
                                 <div *ngIf="isSelectLoading" class="spinner">
                                     <div class="spinner-icon"></div>
@@ -259,11 +260,12 @@
                                      *ngIf="currentProvider['provider']"
                                      [src]="'../../assets/images/providers/' + currentProvider['provider'] + '.svg'">
                             </a>
-                            <p>{{ currentProvider ? currentProvider['provider'] : '' }} - LOCK</p>
+                            <p>{{ currentProvider ? currentProvider['provider'] : '' }} - <label style="text-transform: uppercase">{{ typeSign }}</label></p>
                             <div class="box__head-button"
                                  (click)="!isSignLoading && isAuthorized ? onSignTransaction() : null"
                                  [ngClass]="{'no-active': !isAuthorized}"
                                  #tooltipSelect="matTooltip"
+                                 matTooltipClass="tooltip-auth"
                                  matTooltip="{{ !isAuthorized ? 'You are not authorized!' : null }}">
                                 <div *ngIf="isSignLoading" class="spinner">
                                     <div class="spinner-icon"></div>
@@ -295,7 +297,7 @@
                             <div class="lock-info" *ngIf="userBalances">
                                 <div class="lock-info__item">
                                     <p>Available Balance:</p>
-                                    <b>{{ userBalances[userBalanesType]['availableBalance'] || 0 }} {{
+                                    <b>{{ (userBalances[userBalanesType]['availableBalance'] || 0) | number }} {{
                                         userBalances[userBalanesType]['code'] }}</b>
                                 </div>
                                 <div class="lock-info__item">
@@ -303,17 +305,20 @@
                                     <input type="number"
                                            [(ngModel)]="stakeQut"
                                            [ngClass]="{'error': userBalances[userBalanesType]['newBalance'] < 0 || stakeQut < 0}"
-                                           (keyup)="setBallances($event['target']['value'], userBalanesType)" value="1"
+                                           (keyup)="setBallances($event['target']['value'], userBalanesType)" value="0"
+
+                                           matTooltipClass="tooltip-red"
+                                           matTooltip="{{ stakeQut < 0 ? 'Value must be greater than 0' : (userBalances[userBalanesType]['newBalance'] < 0 ? 'You have insufficient funds on your account' : null) }}"
                                     />
                                 </div>
                                 <div class="lock-info__item lock-info__item-footer">
                                     <div class="lock-info__item-wrap">
-                                        <img class="lock-info__item-icon"
+                                        <img class="lock-info__item-icon pulse"
                                              (click)="onChangeBalanceType()"
                                              src="../../assets/images/{{ userBalanesType }}.png"/>
                                         <p>New Balance:</p>
                                     </div>
-                                    <b>{{ roundPlus(userBalances[userBalanesType]['newBalance']) || 0 }} {{
+                                    <b>{{ (roundPlus(userBalances[userBalanesType]['newBalance']) || 0) | number}} {{
                                         userBalances[userBalanesType]['code'] }}</b>
                                 </div>
                             </div>

@@ -180,6 +180,41 @@ body, html{
   }
 }
 
+.tooltip-auth{
+  background: #0f59d1!important;
+  margin: 10px 0 0 0!important;
+  &:after{
+    content: "";
+    position: absolute;
+    top:-7px;
+    left: 50%;
+    margin-left: -5px;
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid #0f59d1!important;
+
+  }
+}
+
+.tooltip-red{
+  background: red!important;
+  margin: 10px 0 0 0!important;
+  &:after{
+    content: "";
+    position: absolute;
+    top:-7px;
+    left: 50%;
+    margin-left: -5px;
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid red!important;
+  }
+}
+
 @media screen and (max-width: 480px){
   #ual-modal{
     position: fixed !important;

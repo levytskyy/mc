@@ -1,7 +1,7 @@
 import {Component, HostListener, ViewEncapsulation, ViewChild, PLATFORM_ID, Inject, OnInit} from '@angular/core';
 import {trigger, transition, animate, style, state} from '@angular/animations'
 import {PerfectScrollbarComponent} from 'ngx-perfect-scrollbar';
-import {isPlatformBrowser} from '@angular/common';
+import {isPlatformBrowser, DecimalPipe} from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import {ButtonWebViewServices} from '../scater/ButtonWebView.services';
@@ -12,7 +12,7 @@ import {AuthService} from '../services/auth.services';
     templateUrl: 'home.component.html',
     styleUrls: ['home.component.scss'],
     encapsulation: ViewEncapsulation.Emulated,
-    providers: [ButtonWebViewServices],
+    providers: [ButtonWebViewServices, DecimalPipe],
     animations: [
         trigger(
             'enterAnimation', [
@@ -68,7 +68,7 @@ export class HomeComponent implements OnInit {
             "type": 1,
         },
         {
-            "name": "Current Users",
+            "name": "Users",
             "value": 0,
             "type": 1,
         },
@@ -106,7 +106,7 @@ export class HomeComponent implements OnInit {
     isAuthorized:boolean = false;
 
     rateLockInput:number = 0;
-    stakeQut:number = 1;
+    stakeQut:number = 0;
 
     typeSign:string = 'stake';
 
@@ -129,6 +129,7 @@ export class HomeComponent implements OnInit {
     constructor(@Inject(PLATFORM_ID) platformId: string,
                 public buttonWebViewServices: ButtonWebViewServices,
                 public authService: AuthService,
+                private numberPipe : DecimalPipe,
                 private deviceService: DeviceDetectorService){
         this.isBrowser = isPlatformBrowser(platformId);
         if (this.isBrowser) {
@@ -263,7 +264,7 @@ export class HomeComponent implements OnInit {
                     value: this.data['users'],
                     type: 1,
                 },{
-                    name: 'Current Users',
+                    name: 'Users',
                     value: this.currentProvider['users'] ,
                     type: 2
                 }
@@ -276,7 +277,7 @@ export class HomeComponent implements OnInit {
                     value: this.data['staked'],
                     type: 2,
                 },{
-                    name: 'Current staked',
+                    name: 'Staked',
                     value: this.currentProvider['staked'],
                     type: 2
                 });
@@ -332,8 +333,8 @@ export class HomeComponent implements OnInit {
         this.typeSign = 'stake';
         this.onNextCard(5);
 
-        this.setBallances(1, this.userBalanesType);
-        this.stakeQut = 1;
+        this.setBallances(0, this.userBalanesType);
+        this.stakeQut = 0;
 
         //start animation after 800ms or 0ms
         let timeOut = this.boxes[4].visible ? 0 : 800;
@@ -555,7 +556,8 @@ export class HomeComponent implements OnInit {
     }
 
     roundPlus(num) {
-        return num.toFixed(4);
+        if(!num) return;
+        return parseFloat(num).toFixed(4);
     }
 
 
@@ -577,8 +579,8 @@ export class HomeComponent implements OnInit {
 
 
     getPackageInfo(data): any {
-        return 'Staked: '+ data['staked'] +'' +
-            '\n Min stake quantity: '+ data['min_stake_quantity'] +'' +
+        return 'Staked: '+ this.roundPlus(data['staked']) +'' +
+            '\n Min stake quantity: '+ this.roundPlus(data['min_stake_quantity']) +'' +
             '\n Users: '+ data['users'] +'' +
             '\n Users staked: '+ data['user_staked'] +'' +
             '\n Users expire: '+ data['user_expire'] +'' +

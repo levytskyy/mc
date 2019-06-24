@@ -31,17 +31,11 @@ const template = fs.readFileSync(
 const win = domino.createWindow(template);
 
 
-
 var http = require('http');
 var https = require('https');
 var privateKey  = fs.readFileSync('/etc/letsencrypt/live/dsp.mest.net/privkey.pem', 'utf8');
 var certificate = fs.readFileSync('/etc/letsencrypt/live/dsp.mest.net/fullchain.pem', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
-
-
-
-
-
 
 
 global['window'] = win;
