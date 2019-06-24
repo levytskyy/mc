@@ -175,8 +175,9 @@ export class HomeComponent implements OnInit {
             if (data == 'authorized') {
                 this.isAuthorized = true;
                 this.isAuthLoading = true;
-                    this.buttonWebViewServices.getData().then(data => {
+                    this.buttonWebViewServices.getData().then(dataTmp => {
                         this.buttonWebViewServices.getAlways().then(data => {
+                            this.data = [];
                             this.isLoading = false;
 
                             this.data = data;
@@ -216,10 +217,10 @@ export class HomeComponent implements OnInit {
 
 
     onScatter() {
-        this.data = [];
         this.isLoading = true;
-        this.buttonWebViewServices.getData().then(data => {
+        this.buttonWebViewServices.getData().then(dataTmp => {
             this.buttonWebViewServices.getAlways().then(data => {
+                this.data = [];
                 this.isLoading = false;
 
                 this.data = data;
@@ -235,7 +236,6 @@ export class HomeComponent implements OnInit {
             });
 
         });
-
     }
 
 

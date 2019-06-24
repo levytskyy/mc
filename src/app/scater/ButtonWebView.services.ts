@@ -192,12 +192,9 @@ export class ButtonWebViewServices implements OnInit {
                     if (slash !== -1 && json['providers'][p]['website'] === '')
                         json['providers'][p]['website'] = uri.slice(8, slash)
 
-
                     found = false;
                     for (var s = 0; s < json['providers'][p]['services'].length; s++ ) {
                         if (json['providers'][p]['services'][s]['service'] === row['service']) {
-
-
 
                             /*found = false
                              for (var k = 0; k < json['providers'][p]['services'][s]['packages'].length; k++ ) {
@@ -209,7 +206,6 @@ export class ButtonWebViewServices implements OnInit {
                              if (found == false) //PACKAGE NOT FOUND
                              */
                             json['providers'][p]['services'][s]['packages'].push(pkg) //ADD THE PACKAGE
-
 
                             found = true //FOUND THE SERVICE
                             break //LEAVE THE SERVICES LOOP
@@ -515,7 +511,7 @@ export class ButtonWebViewServices implements OnInit {
                 core_liquid_balance: data
             };
 
-            _self.always();
+            _self.once();
             return results;
 
         } catch (e) {
