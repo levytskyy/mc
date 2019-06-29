@@ -188,7 +188,7 @@
 
                         <div class="box__package-body">
                             <div class="token__list">
-                                <div class="token__list-scroll" *ngIf="currentProvider">
+                                <perfect-scrollbar class="token__list-scroll" *ngIf="currentProvider">
                                     <mat-accordion [multi]="false">
                                         <mat-expansion-panel class="accordion-item"
                                                              *ngFor="let item of currentProvider['services']">
@@ -222,7 +222,7 @@
                                             </div>
                                         </mat-expansion-panel>
                                     </mat-accordion>
-                                </div>
+                                </perfect-scrollbar>
                             </div>
                             <div class="box__package-button"
                                  (click)="!isSelectLoading && isAuthorized ? onSelect() : null"
