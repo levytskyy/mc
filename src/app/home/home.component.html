@@ -193,7 +193,9 @@
                                         <mat-expansion-panel class="accordion-item"
                                                              *ngFor="let item of currentProvider['services']">
                                             <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
-                                                <div class="accordion-item__head">
+                                                <div class="accordion-item__head"
+                                                     (click)="setCurrentIdPackage(item['service'])"
+                                                     [ngClass]="{'active': item.service == selectedPackage['service']}">
                                                     <p>{{ item.service }}</p>
                                                     <label>({{ item['users'] }} users)</label>
                                                 </div>

@@ -121,7 +121,14 @@ body, html{
   margin: 0!important;
 }
 .mat-expansion-panel-header{
-  padding: 0;
+  padding: 0!important;
+}
+.mat-expansion-indicator::after{
+  margin-right: -10px;
+}
+.mat-expansion-indicator{
+  position: relative;
+  right: 23px;
 }
 
 .spinner {
@@ -153,12 +160,11 @@ body, html{
 }
 .tooltip {
   font-family: 'avenirregular'!important;
-  font-size: 13px!important;
+  font-size: 14px!important;
   white-space: pre-line!important;
   line-height: 23px;
   padding-left: 10px;
   padding-right: 10px;
-  font-size: 13px!important;
   overflow: hidden;
   text-overflow: ellipsis;
   background: #f4708f;

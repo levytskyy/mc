@@ -459,6 +459,14 @@ $blue-color: rgb(35, 35, 92);
     display: flex;
     align-items: center;
     margin: 0 0 0 0;
+    width: 100%;
+    padding: 0 20px;
+    &.active{
+      width: 100%;
+      padding: 0 20px;
+      background: #ffc597!important;
+      background: linear-gradient(to right, #ffc597 0%, #ffdc93 100%)!important;
+    }
     label {
       font-size: 14px;
       margin: 0 0 0 15px;

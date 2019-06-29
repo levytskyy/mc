@@ -1,7 +1,7 @@
 import {Component, HostListener, ViewEncapsulation, ViewChild, PLATFORM_ID, Inject, OnInit} from '@angular/core';
 import {trigger, transition, animate, style, state} from '@angular/animations'
 import {PerfectScrollbarComponent} from 'ngx-perfect-scrollbar';
-import {isPlatformBrowser, DecimalPipe} from '@angular/common';
+import {isPlatformBrowser, DecimalPipe, DatePipe} from '@angular/common';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import {ButtonWebViewServices} from '../scater/ButtonWebView.services';
@@ -12,7 +12,7 @@ import {AuthService} from '../services/auth.services';
     templateUrl: 'home.component.html',
     styleUrls: ['home.component.scss'],
     encapsulation: ViewEncapsulation.Emulated,
-    providers: [ButtonWebViewServices, DecimalPipe],
+    providers: [ButtonWebViewServices, DecimalPipe, DatePipe],
     animations: [
         trigger(
             'enterAnimation', [
@@ -130,6 +130,7 @@ export class HomeComponent implements OnInit {
                 public buttonWebViewServices: ButtonWebViewServices,
                 public authService: AuthService,
                 private numberPipe : DecimalPipe,
+                private datePipe: DatePipe,
                 private deviceService: DeviceDetectorService){
         this.isBrowser = isPlatformBrowser(platformId);
         if (this.isBrowser) {
@@ -241,6 +242,12 @@ export class HomeComponent implements OnInit {
 
 
     onProvider(item:number) {
+        this.selectedPackage = {
+            provider: null,
+            package: null,
+            service: null
+        };
+
         this.currentProvider = item;
 
         this.boxes[4]['visible'] = false;
@@ -436,7 +443,7 @@ export class HomeComponent implements OnInit {
         }
     }
 
-    setCurrentIdPackage(serviceId, packageId){
+    setCurrentIdPackage(serviceId, packageId = null){
         this.selectedPackage['provider'] = this.currentProvider['provider'];
         this.selectedPackage['package'] = packageId;
         this.selectedPackage['service'] = serviceId;
@@ -579,14 +586,29 @@ export class HomeComponent implements OnInit {
 
 
     getPackageInfo(data): any {
+        let info;
+
+        let user_expire = this.datePipe.transform(data['user_expire'], 'MM.dd.yyyy');
+        if(data['user_expire'] != 0){
+            info = 'Users expire: '+ user_expire;
+        }
+
+        function transformQuota(data){
+            let result = '';
+            if(data['quota_left'] != 0){
+                result = data['quota_left'].split(' QUOTA')[0]  + '/' + data['quota'].split(' QUOTA')[0];
+            }else{
+                result = data['quota'];
+            }
+            return result;
+        }
+
         return 'Staked: '+ this.roundPlus(data['staked']) +'' +
             '\n Min stake quantity: '+ this.roundPlus(data['min_stake_quantity']) +'' +
             '\n Users: '+ data['users'] +'' +
             '\n Users staked: '+ data['user_staked'] +'' +
-            '\n Users expire: '+ data['user_expire'] +'' +
-            '\n Quota: '+ data['quota'] +'  ' +
-            '\n Quota left: '+ data['quota_left'] +'  ' +
-            '\n';
+            '\n Quota: '+ transformQuota(data) +'' +
+            '\n' + (info ? info : '');
     }
 
 }
